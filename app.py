@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import os  # ✅ 빠졌던 import 추가
 
 app = Flask(__name__)
 
