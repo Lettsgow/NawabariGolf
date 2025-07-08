@@ -19,9 +19,9 @@ GOLF_CLUBS = [
     {"name": "골프존H", "seq": "386", "xgolf_code": None},
     {"name": "레싸", "seq": "244", "xgolf_code": None},
     {"name": "중부", "seq": "74", "xgolf_code": None},
-    {"name": "파인크리", "seq": "39", "xgolf_code": None}
-    {"name": "코리아", "seq": "58", "xgolf_code": None}
-    {"name": "리베라", "seq": "235", "xgolf_code": None}
+    {"name": "파인크리", "seq": "39", "xgolf_code": None},
+    {"name": "코리아", "seq": "58", "xgolf_code": None},
+    {"name": "리베라", "seq": "235", "xgolf_code": None},
     {"name": "골드", "seq": "307", "xgolf_code": None}
 ]
 
