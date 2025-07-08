@@ -1,0 +1,1655 @@
+## X golf 
+
+
+GOLF_CLUBS = [
+    {"name": "태광", "seq": "51", "xgolf_code": "136", "golfpang_code": None},
+    {"name": "세현", "seq": "114055", "xgolf_code": "1300", "golfpang_code": None},
+    {"name": "윈체스트", "seq": "102", "xgolf_code": None, "golfpang_code": None},
+    {"name": "이글몬트", "seq": "114312", "xgolf_code": "1562", "golfpang_code": None},
+    {"name": "수원", "seq": "455", "xgolf_code": "137", "golfpang_code": None},
+    {"name": "자유", "seq": "86", "xgolf_code": "318", "golfpang_code": None},
+    {"name": "블루헤런", "seq": "207", "xgolf_code": "101", "golfpang_code": None},
+    {"name": "H1", "seq": "261", "xgolf_code": "803", "golfpang_code": None},
+    {"name": "신라", "seq": "167", "xgolf_code": "108", "golfpang_code": None},
+    {"name": "골프존H", "seq": "386", "xgolf_code": None, "golfpang_code": None},
+    {"name": "레이크사이드", "seq": "244", "xgolf_code": "990", "golfpang_code": None},
+    {"name": "중부", "seq": "74", "xgolf_code": "126", "golfpang_code": None},
+    {"name": "파인크리크", "seq": "39", "xgolf_code": "998", "golfpang_code": None}
+
+    
+[
+    {
+        "CLUB_CODE": "116",
+        "CLUB_NAME": "360도"
+    },
+    {
+        "CLUB_CODE": "324",
+        "CLUB_NAME": "88"
+    },
+    {
+        "CLUB_CODE": "803",
+        "CLUB_NAME": "H1 CLUB"
+    },
+    {
+        "CLUB_CODE": "404",
+        "CLUB_NAME": "SG아름다운"
+    },
+    {
+        "CLUB_CODE": "128",
+        "CLUB_NAME": "YJC골프클럽(구 여주)"
+    },
+    {
+        "CLUB_CODE": "1009",
+        "CLUB_NAME": "YJC골프클럽(구 여주) 단독"
+    },
+    {
+        "CLUB_CODE": "1541",
+        "CLUB_NAME": "감곡"
+    },
+    {
+        "CLUB_CODE": "132",
+        "CLUB_NAME": "강남300"
+    },
+    {
+        "CLUB_CODE": "170",
+        "CLUB_NAME": "강동디아너스(구 블루원디아너스)"
+    },
+    {
+        "CLUB_CODE": "1087",
+        "CLUB_NAME": "강촌명문회원제"
+    },
+    {
+        "CLUB_CODE": "822",
+        "CLUB_NAME": "강촌명문회원제 특가"
+    },
+    {
+        "CLUB_CODE": "193",
+        "CLUB_NAME": "거제뷰"
+    },
+    {
+        "CLUB_CODE": "1069",
+        "CLUB_NAME": "거제뷰 단독"
+    },
+    {
+        "CLUB_CODE": "1046",
+        "CLUB_NAME": "경기광주회원제"
+    },
+    {
+        "CLUB_CODE": "169",
+        "CLUB_NAME": "경주"
+    },
+    {
+        "CLUB_CODE": "653",
+        "CLUB_NAME": "고성 노벨"
+    },
+    {
+        "CLUB_CODE": "376",
+        "CLUB_NAME": "고창"
+    },
+    {
+        "CLUB_CODE": "1221",
+        "CLUB_NAME": "곤지암명문회원제"
+    },
+    {
+        "CLUB_CODE": "1434",
+        "CLUB_NAME": "곤지암회원제"
+    },
+    {
+        "CLUB_CODE": "429",
+        "CLUB_NAME": "골드"
+    },
+    {
+        "CLUB_CODE": "352",
+        "CLUB_NAME": "골드레이크"
+    },
+    {
+        "CLUB_CODE": "383",
+        "CLUB_NAME": "골든베이"
+    },
+    {
+        "CLUB_CODE": "1180",
+        "CLUB_NAME": "골프클럽Q(구 안성Q)"
+    },
+    {
+        "CLUB_CODE": "931",
+        "CLUB_NAME": "구니"
+    },
+    {
+        "CLUB_CODE": "635",
+        "CLUB_NAME": "군산(레귤러)"
+    },
+    {
+        "CLUB_CODE": "1904",
+        "CLUB_NAME": "군산(토너먼트)"
+    },
+    {
+        "CLUB_CODE": "301",
+        "CLUB_NAME": "그랜드(청주)"
+    },
+    {
+        "CLUB_CODE": "105",
+        "CLUB_NAME": "금강"
+    },
+    {
+        "CLUB_CODE": "428",
+        "CLUB_NAME": "금산에딘버러"
+    },
+    {
+        "CLUB_CODE": "859",
+        "CLUB_NAME": "기장동원로얄(P9)"
+    },
+    {
+        "CLUB_CODE": "312",
+        "CLUB_NAME": "기흥"
+    },
+    {
+        "CLUB_CODE": "802",
+        "CLUB_NAME": "김포씨사이드"
+    },
+    {
+        "CLUB_CODE": "130",
+        "CLUB_NAME": "남서울"
+    },
+    {
+        "CLUB_CODE": "367",
+        "CLUB_NAME": "남양주(P9)"
+    },
+    {
+        "CLUB_CODE": "992",
+        "CLUB_NAME": "남여주"
+    },
+    {
+        "CLUB_CODE": "929",
+        "CLUB_NAME": "남원상록"
+    },
+    {
+        "CLUB_CODE": "707",
+        "CLUB_NAME": "남춘천"
+    },
+    {
+        "CLUB_CODE": "1133",
+        "CLUB_NAME": "내장산"
+    },
+    {
+        "CLUB_CODE": "1933",
+        "CLUB_NAME": "노스팜 행사"
+    },
+    {
+        "CLUB_CODE": "877",
+        "CLUB_NAME": "노스팜(구 파주프리스틴밸리)"
+    },
+    {
+        "CLUB_CODE": "106",
+        "CLUB_NAME": "뉴서울"
+    },
+    {
+        "CLUB_CODE": "109",
+        "CLUB_NAME": "뉴스프링빌"
+    },
+    {
+        "CLUB_CODE": "1065",
+        "CLUB_NAME": "뉴스프링빌 단독"
+    },
+    {
+        "CLUB_CODE": "349",
+        "CLUB_NAME": "뉴코리아"
+    },
+    {
+        "CLUB_CODE": "729",
+        "CLUB_NAME": "다산베아채"
+    },
+    {
+        "CLUB_CODE": "536",
+        "CLUB_NAME": "다이아몬드"
+    },
+    {
+        "CLUB_CODE": "1705",
+        "CLUB_NAME": "다이아몬드 단독"
+    },
+    {
+        "CLUB_CODE": "403",
+        "CLUB_NAME": "담양레이나"
+    },
+    {
+        "CLUB_CODE": "1172",
+        "CLUB_NAME": "대가야(P9)"
+    },
+    {
+        "CLUB_CODE": "668",
+        "CLUB_NAME": "대구"
+    },
+    {
+        "CLUB_CODE": "797",
+        "CLUB_NAME": "대영베이스"
+    },
+    {
+        "CLUB_CODE": "798",
+        "CLUB_NAME": "대영힐스"
+    },
+    {
+        "CLUB_CODE": "579",
+        "CLUB_NAME": "대영힐스 단독"
+    },
+    {
+        "CLUB_CODE": "317",
+        "CLUB_NAME": "대호단양"
+    },
+    {
+        "CLUB_CODE": "372",
+        "CLUB_NAME": "더반(P9)"
+    },
+    {
+        "CLUB_CODE": "613",
+        "CLUB_NAME": "더시에나(구 제주)"
+    },
+    {
+        "CLUB_CODE": "850",
+        "CLUB_NAME": "더크로스비"
+    },
+    {
+        "CLUB_CODE": "1214",
+        "CLUB_NAME": "더크로스비 단독"
+    },
+    {
+        "CLUB_CODE": "1452",
+        "CLUB_NAME": "더크로스비 야간"
+    },
+    {
+        "CLUB_CODE": "1940",
+        "CLUB_NAME": "더크로스비 행사"
+    },
+    {
+        "CLUB_CODE": "222",
+        "CLUB_NAME": "더헤븐 선예약(구 아일랜드)"
+    },
+    {
+        "CLUB_CODE": "1160",
+        "CLUB_NAME": "더헤븐 특가"
+    },
+    {
+        "CLUB_CODE": "1937",
+        "CLUB_NAME": "더헤븐(구 아일랜드)"
+    },
+    {
+        "CLUB_CODE": "742",
+        "CLUB_NAME": "더헤븐(구 아일랜드) 단독"
+    },
+    {
+        "CLUB_CODE": "528",
+        "CLUB_NAME": "더힐(P9)"
+    },
+    {
+        "CLUB_CODE": "153",
+        "CLUB_NAME": "델피노설악"
+    },
+    {
+        "CLUB_CODE": "507",
+        "CLUB_NAME": "동강시스타"
+    },
+    {
+        "CLUB_CODE": "640",
+        "CLUB_NAME": "동래베네스트"
+    },
+    {
+        "CLUB_CODE": "1380",
+        "CLUB_NAME": "동서울 레스피아(P10)"
+    },
+    {
+        "CLUB_CODE": "925",
+        "CLUB_NAME": "동전주써미트"
+    },
+    {
+        "CLUB_CODE": "1608",
+        "CLUB_NAME": "동전주써미트 단독"
+    },
+    {
+        "CLUB_CODE": "924",
+        "CLUB_NAME": "동촌"
+    },
+    {
+        "CLUB_CODE": "704",
+        "CLUB_NAME": "동촌 단독"
+    },
+    {
+        "CLUB_CODE": "652",
+        "CLUB_NAME": "드비치"
+    },
+    {
+        "CLUB_CODE": "1018",
+        "CLUB_NAME": "드비치 주말"
+    },
+    {
+        "CLUB_CODE": "147",
+        "CLUB_NAME": "디오션"
+    },
+    {
+        "CLUB_CODE": "306",
+        "CLUB_NAME": "떼제베"
+    },
+    {
+        "CLUB_CODE": "346",
+        "CLUB_NAME": "떼제베 단독"
+    },
+    {
+        "CLUB_CODE": "473",
+        "CLUB_NAME": "라데나"
+    },
+    {
+        "CLUB_CODE": "377",
+        "CLUB_NAME": "라비에벨 듄스코스"
+    },
+    {
+        "CLUB_CODE": "525",
+        "CLUB_NAME": "라비에벨 올드코스"
+    },
+    {
+        "CLUB_CODE": "1207",
+        "CLUB_NAME": "라싸"
+    },
+    {
+        "CLUB_CODE": "1239",
+        "CLUB_NAME": "라싸 단독"
+    },
+    {
+        "CLUB_CODE": "1944",
+        "CLUB_NAME": "라싸 행사"
+    },
+    {
+        "CLUB_CODE": "354",
+        "CLUB_NAME": "라온"
+    },
+    {
+        "CLUB_CODE": "1187",
+        "CLUB_NAME": "레이캐슬"
+    },
+    {
+        "CLUB_CODE": "990",
+        "CLUB_NAME": "레이크사이드"
+    },
+    {
+        "CLUB_CODE": "113",
+        "CLUB_NAME": "레이크우드"
+    },
+    {
+        "CLUB_CODE": "686",
+        "CLUB_NAME": "레인보우힐스"
+    },
+    {
+        "CLUB_CODE": "540",
+        "CLUB_NAME": "로드힐스"
+    },
+    {
+        "CLUB_CODE": "873",
+        "CLUB_NAME": "로얄링스(구 현대더링스)"
+    },
+    {
+        "CLUB_CODE": "685",
+        "CLUB_NAME": "로얄포레"
+    },
+    {
+        "CLUB_CODE": "343",
+        "CLUB_NAME": "로제비앙"
+    },
+    {
+        "CLUB_CODE": "1155",
+        "CLUB_NAME": "로제비앙 단독"
+    },
+    {
+        "CLUB_CODE": "1880",
+        "CLUB_NAME": "로제비앙 야간"
+    },
+    {
+        "CLUB_CODE": "1060",
+        "CLUB_NAME": "로제비앙 특가"
+    },
+    {
+        "CLUB_CODE": "333",
+        "CLUB_NAME": "롯데스카이힐부여"
+    },
+    {
+        "CLUB_CODE": "1590",
+        "CLUB_NAME": "롯데스카이힐부여 단독"
+    },
+    {
+        "CLUB_CODE": "695",
+        "CLUB_NAME": "롯데스카이힐제주"
+    },
+    {
+        "CLUB_CODE": "1415",
+        "CLUB_NAME": "루트52"
+    },
+    {
+        "CLUB_CODE": "1431",
+        "CLUB_NAME": "루트52 단독"
+    },
+    {
+        "CLUB_CODE": "457",
+        "CLUB_NAME": "리베라"
+    },
+    {
+        "CLUB_CODE": "841",
+        "CLUB_NAME": "리베라 단독"
+    },
+    {
+        "CLUB_CODE": "154",
+        "CLUB_NAME": "리앤리"
+    },
+    {
+        "CLUB_CODE": "849",
+        "CLUB_NAME": "링크나인(P9)"
+    },
+    {
+        "CLUB_CODE": "680",
+        "CLUB_NAME": "마론"
+    },
+    {
+        "CLUB_CODE": "985",
+        "CLUB_NAME": "마에스트로"
+    },
+    {
+        "CLUB_CODE": "384",
+        "CLUB_NAME": "마우나오션"
+    },
+    {
+        "CLUB_CODE": "1936",
+        "CLUB_NAME": "마이다스 구미 골프아카데미"
+    },
+    {
+        "CLUB_CODE": "869",
+        "CLUB_NAME": "마이다스레이크 이천"
+    },
+    {
+        "CLUB_CODE": "1838",
+        "CLUB_NAME": "모나크"
+    },
+    {
+        "CLUB_CODE": "311",
+        "CLUB_NAME": "몽베르(대중제)"
+    },
+    {
+        "CLUB_CODE": "1915",
+        "CLUB_NAME": "몽베르(회원제)"
+    },
+    {
+        "CLUB_CODE": "774",
+        "CLUB_NAME": "무안클린밸리"
+    },
+    {
+        "CLUB_CODE": "957",
+        "CLUB_NAME": "문경"
+    },
+    {
+        "CLUB_CODE": "1081",
+        "CLUB_NAME": "밀양 노벨"
+    },
+    {
+        "CLUB_CODE": "390",
+        "CLUB_NAME": "발리오스"
+    },
+    {
+        "CLUB_CODE": "444",
+        "CLUB_NAME": "백제"
+    },
+    {
+        "CLUB_CODE": "1091",
+        "CLUB_NAME": "백제 단독"
+    },
+    {
+        "CLUB_CODE": "398",
+        "CLUB_NAME": "버치힐"
+    },
+    {
+        "CLUB_CODE": "854",
+        "CLUB_NAME": "베뉴지"
+    },
+    {
+        "CLUB_CODE": "302",
+        "CLUB_NAME": "베뉴지 행사"
+    },
+    {
+        "CLUB_CODE": "1868",
+        "CLUB_NAME": "베르힐"
+    },
+    {
+        "CLUB_CODE": "1953",
+        "CLUB_NAME": "베르힐 영종"
+    },
+    {
+        "CLUB_CODE": "1894",
+        "CLUB_NAME": "벨라45"
+    },
+    {
+        "CLUB_CODE": "206",
+        "CLUB_NAME": "벨라스톤"
+    },
+    {
+        "CLUB_CODE": "1079",
+        "CLUB_NAME": "벨라스톤 단독"
+    },
+    {
+        "CLUB_CODE": "1168",
+        "CLUB_NAME": "벨라스톤 특가"
+    },
+    {
+        "CLUB_CODE": "642",
+        "CLUB_NAME": "보라"
+    },
+    {
+        "CLUB_CODE": "1370",
+        "CLUB_NAME": "보령베이스(P9)"
+    },
+    {
+        "CLUB_CODE": "168",
+        "CLUB_NAME": "보문"
+    },
+    {
+        "CLUB_CODE": "394",
+        "CLUB_NAME": "보성"
+    },
+    {
+        "CLUB_CODE": "651",
+        "CLUB_NAME": "부곡"
+    },
+    {
+        "CLUB_CODE": "946",
+        "CLUB_NAME": "블랙밸리"
+    },
+    {
+        "CLUB_CODE": "1131",
+        "CLUB_NAME": "블랙스톤 벨포레"
+    },
+    {
+        "CLUB_CODE": "1181",
+        "CLUB_NAME": "블랙스톤제주"
+    },
+    {
+        "CLUB_CODE": "508",
+        "CLUB_NAME": "블루원상주"
+    },
+    {
+        "CLUB_CODE": "122",
+        "CLUB_NAME": "블루원용인"
+    },
+    {
+        "CLUB_CODE": "123",
+        "CLUB_NAME": "블루원용인(P9)"
+    },
+    {
+        "CLUB_CODE": "101",
+        "CLUB_NAME": "블루헤런"
+    },
+    {
+        "CLUB_CODE": "981",
+        "CLUB_NAME": "비에이비스타"
+    },
+    {
+        "CLUB_CODE": "982",
+        "CLUB_NAME": "비에이비스타(P)"
+    },
+    {
+        "CLUB_CODE": "1941",
+        "CLUB_NAME": "비에이비스타(P) 행사"
+    },
+    {
+        "CLUB_CODE": "462",
+        "CLUB_NAME": "비콘힐스"
+    },
+    {
+        "CLUB_CODE": "335",
+        "CLUB_NAME": "빅토리아(P9)"
+    },
+    {
+        "CLUB_CODE": "396",
+        "CLUB_NAME": "사우스스프링스"
+    },
+    {
+        "CLUB_CODE": "453",
+        "CLUB_NAME": "사우스스프링스 행사"
+    },
+    {
+        "CLUB_CODE": "895",
+        "CLUB_NAME": "샤인데일"
+    },
+    {
+        "CLUB_CODE": "284",
+        "CLUB_NAME": "샴발라"
+    },
+    {
+        "CLUB_CODE": "1233",
+        "CLUB_NAME": "샴발라 단독"
+    },
+    {
+        "CLUB_CODE": "614",
+        "CLUB_NAME": "서귀포팬텀(구 우리들)"
+    },
+    {
+        "CLUB_CODE": "405",
+        "CLUB_NAME": "서산수"
+    },
+    {
+        "CLUB_CODE": "1006",
+        "CLUB_NAME": "서산수 단독"
+    },
+    {
+        "CLUB_CODE": "365",
+        "CLUB_NAME": "서서울"
+    },
+    {
+        "CLUB_CODE": "1417",
+        "CLUB_NAME": "서서울 단독"
+    },
+    {
+        "CLUB_CODE": "164",
+        "CLUB_NAME": "서원밸리"
+    },
+    {
+        "CLUB_CODE": "125",
+        "CLUB_NAME": "서원힐스"
+    },
+    {
+        "CLUB_CODE": "1448",
+        "CLUB_NAME": "서원힐스 단독"
+    },
+    {
+        "CLUB_CODE": "152",
+        "CLUB_NAME": "석정힐"
+    },
+    {
+        "CLUB_CODE": "463",
+        "CLUB_NAME": "세레니티"
+    },
+    {
+        "CLUB_CODE": "1242",
+        "CLUB_NAME": "세븐밸리 단독"
+    },
+    {
+        "CLUB_CODE": "227",
+        "CLUB_NAME": "세이지우드 여수경도"
+    },
+    {
+        "CLUB_CODE": "921",
+        "CLUB_NAME": "세이지우드 홍천"
+    },
+    {
+        "CLUB_CODE": "1300",
+        "CLUB_NAME": "세현"
+    },
+    {
+        "CLUB_CODE": "203",
+        "CLUB_NAME": "센추리21"
+    },
+    {
+        "CLUB_CODE": "1288",
+        "CLUB_NAME": "센추리21 단독"
+    },
+    {
+        "CLUB_CODE": "329",
+        "CLUB_NAME": "센추리21(P)"
+    },
+    {
+        "CLUB_CODE": "532",
+        "CLUB_NAME": "센추리21(P) 단독"
+    },
+    {
+        "CLUB_CODE": "810",
+        "CLUB_NAME": "센테리움"
+    },
+    {
+        "CLUB_CODE": "1283",
+        "CLUB_NAME": "센테리움 단독"
+    },
+    {
+        "CLUB_CODE": "435",
+        "CLUB_NAME": "소피아그린"
+    },
+    {
+        "CLUB_CODE": "142",
+        "CLUB_NAME": "속리산(구 클럽디속리산)"
+    },
+    {
+        "CLUB_CODE": "286",
+        "CLUB_NAME": "솔라고"
+    },
+    {
+        "CLUB_CODE": "1360",
+        "CLUB_NAME": "솔라고 단독"
+    },
+    {
+        "CLUB_CODE": "1491",
+        "CLUB_NAME": "솔라시도"
+    },
+    {
+        "CLUB_CODE": "1918",
+        "CLUB_NAME": "솔라시도(기업)"
+    },
+    {
+        "CLUB_CODE": "440",
+        "CLUB_NAME": "솔모로"
+    },
+    {
+        "CLUB_CODE": "1419",
+        "CLUB_NAME": "솔모로 단독"
+    },
+    {
+        "CLUB_CODE": "830",
+        "CLUB_NAME": "솔모로 특가"
+    },
+    {
+        "CLUB_CODE": "480",
+        "CLUB_NAME": "솔트베이"
+    },
+    {
+        "CLUB_CODE": "1057",
+        "CLUB_NAME": "솔트베이 특가"
+    },
+    {
+        "CLUB_CODE": "455",
+        "CLUB_NAME": "수원"
+    },
+    {
+        "CLUB_CODE": "265",
+        "CLUB_NAME": "순천부영"
+    },
+    {
+        "CLUB_CODE": "814",
+        "CLUB_NAME": "스마트KU"
+    },
+    {
+        "CLUB_CODE": "107",
+        "CLUB_NAME": "스카이밸리"
+    },
+    {
+        "CLUB_CODE": "1538",
+        "CLUB_NAME": "스카이밸리 단독"
+    },
+    {
+        "CLUB_CODE": "138",
+        "CLUB_NAME": "스타(구 상떼힐)"
+    },
+    {
+        "CLUB_CODE": "1001",
+        "CLUB_NAME": "스톤게이트"
+    },
+    {
+        "CLUB_CODE": "363",
+        "CLUB_NAME": "스톤비치(구 태안비치)"
+    },
+    {
+        "CLUB_CODE": "956",
+        "CLUB_NAME": "스프링베일(P9)"
+    },
+    {
+        "CLUB_CODE": "305",
+        "CLUB_NAME": "시그너스"
+    },
+    {
+        "CLUB_CODE": "253",
+        "CLUB_NAME": "시그너스 단독"
+    },
+    {
+        "CLUB_CODE": "1710",
+        "CLUB_NAME": "시엘골프클럽(P9)"
+    },
+    {
+        "CLUB_CODE": "952",
+        "CLUB_NAME": "시티파크"
+    },
+    {
+        "CLUB_CODE": "456",
+        "CLUB_NAME": "신안"
+    },
+    {
+        "CLUB_CODE": "111",
+        "CLUB_NAME": "신안(P9)"
+    },
+    {
+        "CLUB_CODE": "140",
+        "CLUB_NAME": "써닝포인트"
+    },
+    {
+        "CLUB_CODE": "412",
+        "CLUB_NAME": "써닝포인트 단독"
+    },
+    {
+        "CLUB_CODE": "112",
+        "CLUB_NAME": "썬힐"
+    },
+    {
+        "CLUB_CODE": "1158",
+        "CLUB_NAME": "썬힐 단독"
+    },
+    {
+        "CLUB_CODE": "280",
+        "CLUB_NAME": "썬힐 행사"
+    },
+    {
+        "CLUB_CODE": "145",
+        "CLUB_NAME": "아난티 중앙 골프클럽"
+    },
+    {
+        "CLUB_CODE": "824",
+        "CLUB_NAME": "아난티 중앙 골프클럽(구 진천 에머슨) 단독"
+    },
+    {
+        "CLUB_CODE": "1156",
+        "CLUB_NAME": "아리스타"
+    },
+    {
+        "CLUB_CODE": "366",
+        "CLUB_NAME": "아리지"
+    },
+    {
+        "CLUB_CODE": "257",
+        "CLUB_NAME": "아세코밸리(P9)"
+    },
+    {
+        "CLUB_CODE": "464",
+        "CLUB_NAME": "아시아나"
+    },
+    {
+        "CLUB_CODE": "795",
+        "CLUB_NAME": "안동레이크"
+    },
+    {
+        "CLUB_CODE": "603",
+        "CLUB_NAME": "안성"
+    },
+    {
+        "CLUB_CODE": "1182",
+        "CLUB_NAME": "안성 비공개"
+    },
+    {
+        "CLUB_CODE": "1238",
+        "CLUB_NAME": "안성 회원제"
+    },
+    {
+        "CLUB_CODE": "133",
+        "CLUB_NAME": "안성베네스트"
+    },
+    {
+        "CLUB_CODE": "157",
+        "CLUB_NAME": "알펜시아"
+    },
+    {
+        "CLUB_CODE": "198",
+        "CLUB_NAME": "알펜시아700"
+    },
+    {
+        "CLUB_CODE": "414",
+        "CLUB_NAME": "알프스대영"
+    },
+    {
+        "CLUB_CODE": "493",
+        "CLUB_NAME": "애플밸리(P9)"
+    },
+    {
+        "CLUB_CODE": "786",
+        "CLUB_NAME": "양산동원로얄"
+    },
+    {
+        "CLUB_CODE": "310",
+        "CLUB_NAME": "양주"
+    },
+    {
+        "CLUB_CODE": "1003",
+        "CLUB_NAME": "양주 단독"
+    },
+    {
+        "CLUB_CODE": "131",
+        "CLUB_NAME": "양지파인"
+    },
+    {
+        "CLUB_CODE": "662",
+        "CLUB_NAME": "양지파인 단독"
+    },
+    {
+        "CLUB_CODE": "118",
+        "CLUB_NAME": "양평TPC"
+    },
+    {
+        "CLUB_CODE": "649",
+        "CLUB_NAME": "에덴밸리"
+    },
+    {
+        "CLUB_CODE": "968",
+        "CLUB_NAME": "에덴블루"
+    },
+    {
+        "CLUB_CODE": "731",
+        "CLUB_NAME": "에덴블루 단독"
+    },
+    {
+        "CLUB_CODE": "619",
+        "CLUB_NAME": "에버리스"
+    },
+    {
+        "CLUB_CODE": "279",
+        "CLUB_NAME": "에스앤(대천)(P9)"
+    },
+    {
+        "CLUB_CODE": "648",
+        "CLUB_NAME": "에이원"
+    },
+    {
+        "CLUB_CODE": "273",
+        "CLUB_NAME": "엠스클럽의성"
+    },
+    {
+        "CLUB_CODE": "1201",
+        "CLUB_NAME": "여주 비공개"
+    },
+    {
+        "CLUB_CODE": "108",
+        "CLUB_NAME": "여주신라"
+    },
+    {
+        "CLUB_CODE": "908",
+        "CLUB_NAME": "여주신라 단독"
+    },
+    {
+        "CLUB_CODE": "1376",
+        "CLUB_NAME": "여주프리미엄회원제"
+    },
+    {
+        "CLUB_CODE": "936",
+        "CLUB_NAME": "오너스"
+    },
+    {
+        "CLUB_CODE": "1114",
+        "CLUB_NAME": "오너스 단독"
+    },
+    {
+        "CLUB_CODE": "634",
+        "CLUB_NAME": "오너스 특가"
+    },
+    {
+        "CLUB_CODE": "178",
+        "CLUB_NAME": "오렌지듄스 송도"
+    },
+    {
+        "CLUB_CODE": "821",
+        "CLUB_NAME": "오렌지듄스 송도 특가"
+    },
+    {
+        "CLUB_CODE": "1510",
+        "CLUB_NAME": "오렌지듄스 영종"
+    },
+    {
+        "CLUB_CODE": "1865",
+        "CLUB_NAME": "오로라골프앤리조트"
+    },
+    {
+        "CLUB_CODE": "1928",
+        "CLUB_NAME": "오르비스"
+    },
+    {
+        "CLUB_CODE": "173",
+        "CLUB_NAME": "오션비치"
+    },
+    {
+        "CLUB_CODE": "511",
+        "CLUB_NAME": "오창에딘버러(P9)"
+    },
+    {
+        "CLUB_CODE": "748",
+        "CLUB_NAME": "오크밸리"
+    },
+    {
+        "CLUB_CODE": "362",
+        "CLUB_NAME": "오크힐스"
+    },
+    {
+        "CLUB_CODE": "472",
+        "CLUB_NAME": "옥스필드"
+    },
+    {
+        "CLUB_CODE": "1153",
+        "CLUB_NAME": "옥스필드 특가"
+    },
+    {
+        "CLUB_CODE": "1332",
+        "CLUB_NAME": "올데이"
+    },
+    {
+        "CLUB_CODE": "1366",
+        "CLUB_NAME": "올데이 단독"
+    },
+    {
+        "CLUB_CODE": "723",
+        "CLUB_NAME": "올림픽(P9)"
+    },
+    {
+        "CLUB_CODE": "647",
+        "CLUB_NAME": "용원"
+    },
+    {
+        "CLUB_CODE": "340",
+        "CLUB_NAME": "용인"
+    },
+    {
+        "CLUB_CODE": "1073",
+        "CLUB_NAME": "용인 단독"
+    },
+    {
+        "CLUB_CODE": "320",
+        "CLUB_NAME": "용평"
+    },
+    {
+        "CLUB_CODE": "321",
+        "CLUB_NAME": "용평(P9)"
+    },
+    {
+        "CLUB_CODE": "524",
+        "CLUB_NAME": "우리(P9)"
+    },
+    {
+        "CLUB_CODE": "1772",
+        "CLUB_NAME": "울진마린"
+    },
+    {
+        "CLUB_CODE": "1861",
+        "CLUB_NAME": "웅포"
+    },
+    {
+        "CLUB_CODE": "201",
+        "CLUB_NAME": "월송리(구 오크크릭)"
+    },
+    {
+        "CLUB_CODE": "423",
+        "CLUB_NAME": "웨스트오션(구 영광)"
+    },
+    {
+        "CLUB_CODE": "179",
+        "CLUB_NAME": "웰리힐리"
+    },
+    {
+        "CLUB_CODE": "1038",
+        "CLUB_NAME": "유니아일랜드"
+    },
+    {
+        "CLUB_CODE": "977",
+        "CLUB_NAME": "은화삼"
+    },
+    {
+        "CLUB_CODE": "586",
+        "CLUB_NAME": "의령 리온"
+    },
+    {
+        "CLUB_CODE": "1562",
+        "CLUB_NAME": "이글몬트"
+    },
+    {
+        "CLUB_CODE": "503",
+        "CLUB_NAME": "이븐데일"
+    },
+    {
+        "CLUB_CODE": "1604",
+        "CLUB_NAME": "이지스카이"
+    },
+    {
+        "CLUB_CODE": "719",
+        "CLUB_NAME": "이천명문회원제"
+    },
+    {
+        "CLUB_CODE": "714",
+        "CLUB_NAME": "이천명문회원제 특가"
+    },
+    {
+        "CLUB_CODE": "1835",
+        "CLUB_NAME": "이천명문회원제(카트포함) 행사"
+    },
+    {
+        "CLUB_CODE": "330",
+        "CLUB_NAME": "이포"
+    },
+    {
+        "CLUB_CODE": "1137",
+        "CLUB_NAME": "이포 단독"
+    },
+    {
+        "CLUB_CODE": "1162",
+        "CLUB_NAME": "인서울27"
+    },
+    {
+        "CLUB_CODE": "1025",
+        "CLUB_NAME": "인서울27 단독"
+    },
+    {
+        "CLUB_CODE": "104",
+        "CLUB_NAME": "인천그랜드"
+    },
+    {
+        "CLUB_CODE": "255",
+        "CLUB_NAME": "인터불고원주"
+    },
+    {
+        "CLUB_CODE": "1744",
+        "CLUB_NAME": "일라이트"
+    },
+    {
+        "CLUB_CODE": "1341",
+        "CLUB_NAME": "일레븐"
+    },
+    {
+        "CLUB_CODE": "304",
+        "CLUB_NAME": "임페리얼레이크"
+    },
+    {
+        "CLUB_CODE": "1115",
+        "CLUB_NAME": "임페리얼레이크 단독"
+    },
+    {
+        "CLUB_CODE": "318",
+        "CLUB_NAME": "자유"
+    },
+    {
+        "CLUB_CODE": "297",
+        "CLUB_NAME": "자유로"
+    },
+    {
+        "CLUB_CODE": "1122",
+        "CLUB_NAME": "자유로 단독"
+    },
+    {
+        "CLUB_CODE": "215",
+        "CLUB_NAME": "장수"
+    },
+    {
+        "CLUB_CODE": "646",
+        "CLUB_NAME": "정산"
+    },
+    {
+        "CLUB_CODE": "1878",
+        "CLUB_NAME": "제이퍼블릭(P6)"
+    },
+    {
+        "CLUB_CODE": "1885",
+        "CLUB_NAME": "제이퍼블릭(P6)18홀"
+    },
+    {
+        "CLUB_CODE": "620",
+        "CLUB_NAME": "제주 아덴힐"
+    },
+    {
+        "CLUB_CODE": "601",
+        "CLUB_NAME": "제주 해비치"
+    },
+    {
+        "CLUB_CODE": "504",
+        "CLUB_NAME": "젠스필드(일죽)"
+    },
+    {
+        "CLUB_CODE": "1220",
+        "CLUB_NAME": "죽향(P9)"
+    },
+    {
+        "CLUB_CODE": "126",
+        "CLUB_NAME": "중부"
+    },
+    {
+        "CLUB_CODE": "1435",
+        "CLUB_NAME": "중부 단독"
+    },
+    {
+        "CLUB_CODE": "315",
+        "CLUB_NAME": "중원"
+    },
+    {
+        "CLUB_CODE": "150",
+        "CLUB_NAME": "진양밸리"
+    },
+    {
+        "CLUB_CODE": "252",
+        "CLUB_NAME": "참밸리"
+    },
+    {
+        "CLUB_CODE": "309",
+        "CLUB_NAME": "천룡"
+    },
+    {
+        "CLUB_CODE": "303",
+        "CLUB_NAME": "천룡(P9)"
+    },
+    {
+        "CLUB_CODE": "1831",
+        "CLUB_NAME": "카스카디아"
+    },
+    {
+        "CLUB_CODE": "1927",
+        "CLUB_NAME": "카스카디아 특가"
+    },
+    {
+        "CLUB_CODE": "314",
+        "CLUB_NAME": "캐슬렉스"
+    },
+    {
+        "CLUB_CODE": "359",
+        "CLUB_NAME": "캐슬렉스 단독"
+    },
+    {
+        "CLUB_CODE": "610",
+        "CLUB_NAME": "캐슬렉스제주"
+    },
+    {
+        "CLUB_CODE": "124",
+        "CLUB_NAME": "캐슬파인"
+    },
+    {
+        "CLUB_CODE": "210",
+        "CLUB_NAME": "코리아"
+    },
+    {
+        "CLUB_CODE": "117",
+        "CLUB_NAME": "코리아(P9)"
+    },
+    {
+        "CLUB_CODE": "1862",
+        "CLUB_NAME": "코스모스링스"
+    },
+    {
+        "CLUB_CODE": "143",
+        "CLUB_NAME": "코스카"
+    },
+    {
+        "CLUB_CODE": "953",
+        "CLUB_NAME": "크리스탈밸리 "
+    },
+    {
+        "CLUB_CODE": "1232",
+        "CLUB_NAME": "클럽72(구 스카이72)"
+    },
+    {
+        "CLUB_CODE": "155",
+        "CLUB_NAME": "클럽디 더플레이어스"
+    },
+    {
+        "CLUB_CODE": "1410",
+        "CLUB_NAME": "클럽디 더플레이어스 단독"
+    },
+    {
+        "CLUB_CODE": "596",
+        "CLUB_NAME": "클럽디 더플레이어스 특가"
+    },
+    {
+        "CLUB_CODE": "1282",
+        "CLUB_NAME": "클럽디거창"
+    },
+    {
+        "CLUB_CODE": "127",
+        "CLUB_NAME": "클럽디금강"
+    },
+    {
+        "CLUB_CODE": "839",
+        "CLUB_NAME": "클럽디보은"
+    },
+    {
+        "CLUB_CODE": "1473",
+        "CLUB_NAME": "클럽모우"
+    },
+    {
+        "CLUB_CODE": "1098",
+        "CLUB_NAME": "클럽모우 단독"
+    },
+    {
+        "CLUB_CODE": "1602",
+        "CLUB_NAME": "클럽모우 선예약"
+    },
+    {
+        "CLUB_CODE": "746",
+        "CLUB_NAME": "클럽모우 특가"
+    },
+    {
+        "CLUB_CODE": "1035",
+        "CLUB_NAME": "클럽모우 행사"
+    },
+    {
+        "CLUB_CODE": "102",
+        "CLUB_NAME": "킹스데일"
+    },
+    {
+        "CLUB_CODE": "289",
+        "CLUB_NAME": "킹즈락"
+    },
+    {
+        "CLUB_CODE": "878",
+        "CLUB_NAME": "타이거"
+    },
+    {
+        "CLUB_CODE": "1408",
+        "CLUB_NAME": "타이거 단독"
+    },
+    {
+        "CLUB_CODE": "1218",
+        "CLUB_NAME": "타이거 특가"
+    },
+    {
+        "CLUB_CODE": "136",
+        "CLUB_NAME": "태광"
+    },
+    {
+        "CLUB_CODE": "402",
+        "CLUB_NAME": "통영동원로얄"
+    },
+    {
+        "CLUB_CODE": "721",
+        "CLUB_NAME": "파가니카"
+    },
+    {
+        "CLUB_CODE": "698",
+        "CLUB_NAME": "파나시아(P9)"
+    },
+    {
+        "CLUB_CODE": "751",
+        "CLUB_NAME": "파라지오"
+    },
+    {
+        "CLUB_CODE": "688",
+        "CLUB_NAME": "파인리즈"
+    },
+    {
+        "CLUB_CODE": "205",
+        "CLUB_NAME": "파인밸리"
+    },
+    {
+        "CLUB_CODE": "184",
+        "CLUB_NAME": "파인비치"
+    },
+    {
+        "CLUB_CODE": "674",
+        "CLUB_NAME": "파인스톤"
+    },
+    {
+        "CLUB_CODE": "998",
+        "CLUB_NAME": "파인크리크"
+    },
+    {
+        "CLUB_CODE": "357",
+        "CLUB_NAME": "파인힐스"
+    },
+    {
+        "CLUB_CODE": "967",
+        "CLUB_NAME": "파주"
+    },
+    {
+        "CLUB_CODE": "202",
+        "CLUB_NAME": "파크밸리"
+    },
+    {
+        "CLUB_CODE": "876",
+        "CLUB_NAME": "페럼"
+    },
+    {
+        "CLUB_CODE": "520",
+        "CLUB_NAME": "펜타뷰(P9)"
+    },
+    {
+        "CLUB_CODE": "327",
+        "CLUB_NAME": "포라이즌(구 승주)"
+    },
+    {
+        "CLUB_CODE": "809",
+        "CLUB_NAME": "포레스트힐"
+    },
+    {
+        "CLUB_CODE": "1778",
+        "CLUB_NAME": "포레스트힐 단독"
+    },
+    {
+        "CLUB_CODE": "763",
+        "CLUB_NAME": "포레스트힐 선예약"
+    },
+    {
+        "CLUB_CODE": "1945",
+        "CLUB_NAME": "포레스트힐 행사"
+    },
+    {
+        "CLUB_CODE": "812",
+        "CLUB_NAME": "포레스트힐(P6)"
+    },
+    {
+        "CLUB_CODE": "258",
+        "CLUB_NAME": "포레스트힐(P6) 단독"
+    },
+    {
+        "CLUB_CODE": "747",
+        "CLUB_NAME": "포웰 안성(구 루나힐스안성)"
+    },
+    {
+        "CLUB_CODE": "1337",
+        "CLUB_NAME": "포웰 안성(구 루나힐스안성) 단독"
+    },
+    {
+        "CLUB_CODE": "699",
+        "CLUB_NAME": "포웰(구 롯데스카이힐김해)"
+    },
+    {
+        "CLUB_CODE": "1235",
+        "CLUB_NAME": "포천 회원제"
+    },
+    {
+        "CLUB_CODE": "1794",
+        "CLUB_NAME": "포천명문회원제"
+    },
+    {
+        "CLUB_CODE": "445",
+        "CLUB_NAME": "포천아도니스"
+    },
+    {
+        "CLUB_CODE": "446",
+        "CLUB_NAME": "포천아도니스(P9)"
+    },
+    {
+        "CLUB_CODE": "599",
+        "CLUB_NAME": "포천힐스"
+    },
+    {
+        "CLUB_CODE": "1116",
+        "CLUB_NAME": "포천힐스 단독"
+    },
+    {
+        "CLUB_CODE": "592",
+        "CLUB_NAME": "포천힐스 특가"
+    },
+    {
+        "CLUB_CODE": "1267",
+        "CLUB_NAME": "포천힐스 행사"
+    },
+    {
+        "CLUB_CODE": "246",
+        "CLUB_NAME": "포항"
+    },
+    {
+        "CLUB_CODE": "842",
+        "CLUB_NAME": "푸른솔장성"
+    },
+    {
+        "CLUB_CODE": "997",
+        "CLUB_NAME": "푸른솔포천"
+    },
+    {
+        "CLUB_CODE": "754",
+        "CLUB_NAME": "푸른솔포천 단독"
+    },
+    {
+        "CLUB_CODE": "818",
+        "CLUB_NAME": "푸른솔포천 특가"
+    },
+    {
+        "CLUB_CODE": "805",
+        "CLUB_NAME": "프리스틴밸리"
+    },
+    {
+        "CLUB_CODE": "1530",
+        "CLUB_NAME": "프리스틴밸리 단독"
+    },
+    {
+        "CLUB_CODE": "373",
+        "CLUB_NAME": "프린세스"
+    },
+    {
+        "CLUB_CODE": "1810",
+        "CLUB_NAME": "플라밍고"
+    },
+    {
+        "CLUB_CODE": "369",
+        "CLUB_NAME": "플라자설악"
+    },
+    {
+        "CLUB_CODE": "1335",
+        "CLUB_NAME": "플라자설악 단독"
+    },
+    {
+        "CLUB_CODE": "386",
+        "CLUB_NAME": "플라자용인"
+    },
+    {
+        "CLUB_CODE": "496",
+        "CLUB_NAME": "플라자제주(P9)"
+    },
+    {
+        "CLUB_CODE": "605",
+        "CLUB_NAME": "핀크스"
+    },
+    {
+        "CLUB_CODE": "114",
+        "CLUB_NAME": "필로스"
+    },
+    {
+        "CLUB_CODE": "298",
+        "CLUB_NAME": "필로스 야간"
+    },
+    {
+        "CLUB_CODE": "864",
+        "CLUB_NAME": "필로스 특가"
+    },
+    {
+        "CLUB_CODE": "801",
+        "CLUB_NAME": "한림광릉"
+    },
+    {
+        "CLUB_CODE": "806",
+        "CLUB_NAME": "한림광릉 야간"
+    },
+    {
+        "CLUB_CODE": "1374",
+        "CLUB_NAME": "한림안성(P9)"
+    },
+    {
+        "CLUB_CODE": "988",
+        "CLUB_NAME": "한림용인"
+    },
+    {
+        "CLUB_CODE": "254",
+        "CLUB_NAME": "한맥"
+    },
+    {
+        "CLUB_CODE": "1717",
+        "CLUB_NAME": "한미르대덕(P9)"
+    },
+    {
+        "CLUB_CODE": "338",
+        "CLUB_NAME": "한성"
+    },
+    {
+        "CLUB_CODE": "500",
+        "CLUB_NAME": "한양"
+    },
+    {
+        "CLUB_CODE": "738",
+        "CLUB_NAME": "한양파인(P9)"
+    },
+    {
+        "CLUB_CODE": "115",
+        "CLUB_NAME": "한원"
+    },
+    {
+        "CLUB_CODE": "1027",
+        "CLUB_NAME": "한원 행사"
+    },
+    {
+        "CLUB_CODE": "344",
+        "CLUB_NAME": "한탄강"
+    },
+    {
+        "CLUB_CODE": "436",
+        "CLUB_NAME": "함평천지(P9)"
+    },
+    {
+        "CLUB_CODE": "656",
+        "CLUB_NAME": "해내다(구 인터불고경산)"
+    },
+    {
+        "CLUB_CODE": "141",
+        "CLUB_NAME": "해솔리아"
+    },
+    {
+        "CLUB_CODE": "1921",
+        "CLUB_NAME": "해운대"
+    },
+    {
+        "CLUB_CODE": "636",
+        "CLUB_NAME": "해운대(기업)"
+    },
+    {
+        "CLUB_CODE": "1369",
+        "CLUB_NAME": "해운대비치"
+    },
+    {
+        "CLUB_CODE": "161",
+        "CLUB_NAME": "해피니스"
+    },
+    {
+        "CLUB_CODE": "418",
+        "CLUB_NAME": "화성(P9)"
+    },
+    {
+        "CLUB_CODE": "419",
+        "CLUB_NAME": "화성상록"
+    },
+    {
+        "CLUB_CODE": "347",
+        "CLUB_NAME": "화순(구 클럽900)"
+    },
+    {
+        "CLUB_CODE": "322",
+        "CLUB_NAME": "화순엘리체"
+    },
+    {
+        "CLUB_CODE": "391",
+        "CLUB_NAME": "휘닉스"
+    },
+    {
+        "CLUB_CODE": "389",
+        "CLUB_NAME": "히든밸리"
+    },
+    {
+        "CLUB_CODE": "509",
+        "CLUB_NAME": "힐데스하임"
+    },
+    {
+        "CLUB_CODE": "690",
+        "CLUB_NAME": "힐드로사이"
+    },
+    {
+        "CLUB_CODE": "1110",
+        "CLUB_NAME": "힐드로사이 단독"
+    },
+    {
+        "CLUB_CODE": "497",
+        "CLUB_NAME": "힐마루(창녕)"
+    },
+    {
+        "CLUB_CODE": "212",
+        "CLUB_NAME": "힐마루(창녕)(P)"
+    },
+    {
+        "CLUB_CODE": "1902",
+        "CLUB_NAME": "힐마루(포천)"
+    },
+    {
+        "CLUB_CODE": "1903",
+        "CLUB_NAME": "힐마루(포천) 야간"
+    },
+    {
+        "CLUB_CODE": "1752",
+        "CLUB_NAME": "힐스카이(구 루나엑스)" ##

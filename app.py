@@ -71,6 +71,10 @@ def get_xgolf_prices(club_code, club_name, date):
     except Exception as e:
         print(f"❌ XGOLF 오류 ({club_name}): {e}")
         return []
+    
+@app.route('/get_all_golfclubs')
+def get_all_golfclubs():
+    return jsonify(sorted([club["name"] for club in GOLF_CLUBS]))
 
 @app.route('/')
 def index():
