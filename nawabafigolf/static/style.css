@@ -1,0 +1,181 @@
+body { 
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  background: #f7f7f7;
+}
+
+h1 {
+  color: #333;
+}
+
+.controls label {
+  margin-right: 15px;
+}
+
+input[type="date"] {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 8px 15px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #005f99;
+  cursor: pointer;
+}
+
+.hour-filter {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.hour-filter label {
+  margin-right: 10px;
+}
+
+#bonus-tip {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  table-layout: fixed;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+  vertical-align: middle;
+  max-width: 80px;
+  height: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #0074D9;
+  color: white;
+  font-weight: bold;
+  z-index: 10;
+}
+
+td {
+  background-color: white;
+}
+
+td:first-child, th:first-child {
+  width: 120px;
+  background-color: #f2f2f2;
+  z-index: 11;
+}
+
+.highlight {
+  background-color: #fff3cd;
+  font-weight: bold;
+  color: #d35400;
+}
+
+.benefit-inline {
+  font-size: 0.7em;
+  color: #666;
+  margin-top: 3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.new-date td {
+  border-top: 3px solid #444;
+  background-color: white;
+  position: relative;
+  z-index: 1;
+}
+
+/* ⚙️ 설정 아이콘 버튼 */
+#settings-button {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 1000px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 🔲 설정 모달 배경 */
+#settings-modal {
+  display: none; /* JS에서 block으로 보여줌 */
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.75); /* 더 진한 반투명 */
+  backdrop-filter: blur(2px);
+}
+
+/* 🪟 모달 본문 */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  margin: 150px auto;
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* 📋 구장 리스트 내 체크박스 라벨 */
+.modal-content label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ✅ 저장/취소 버튼 라인 */
+.modal-actions {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.modal-actions button {
+  margin-left: 5px;
+  padding: 6px 12px;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-actions button:hover {
+  background-color: #005f99;
+}
+
+.header-with-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+#settings-button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  margin-left: 10px;
+}
