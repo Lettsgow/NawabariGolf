@@ -7,22 +7,41 @@ import os  # ✅ 빠졌던 import 추가
 app = Flask(__name__)
 
 GOLF_CLUBS = [
-    {"name": "태광", "seq": "51", "xgolf_code": None},
-    {"name": "세현", "seq": "114055", "xgolf_code": "1300"},
-    {"name": "윈체스트", "seq": "102", "xgolf_code": None},
-    {"name": "이글몬트", "seq": "114312", "xgolf_code": None},
-    {"name": "수원", "seq": "176", "xgolf_code": None},
-    {"name": "자유", "seq": "86", "xgolf_code": None},
-    {"name": "블루헤런", "seq": "207", "xgolf_code": None},
-    {"name": "H1", "seq": "261", "xgolf_code": None},
-    {"name": "신라", "seq": "167", "xgolf_code": None},
-    {"name": "골프존H", "seq": "386", "xgolf_code": None},
-    {"name": "레싸", "seq": "244", "xgolf_code": None},
-    {"name": "중부", "seq": "74", "xgolf_code": None},
-    {"name": "파인크리", "seq": "39", "xgolf_code": None},
-    {"name": "코리아", "seq": "58", "xgolf_code": None},
-    {"name": "리베라", "seq": "235", "xgolf_code": None},
-    {"name": "골드", "seq": "307", "xgolf_code": None}
+    {"name": "태광", "seq": "51", "xgolf_code": None},#경기
+    {"name": "세현", "seq": "114055", "xgolf_code": "1300"},#경기
+    {"name": "윈체스트", "seq": "102", "xgolf_code": None},#경기
+    {"name": "이글몬트", "seq": "114312", "xgolf_code": None},#경기
+    {"name": "수원", "seq": "176", "xgolf_code": None},#경기
+    {"name": "자유", "seq": "86", "xgolf_code": None},#경기
+    {"name": "블루헤런", "seq": "207", "xgolf_code": None},#경기
+    {"name": "H1", "seq": "261", "xgolf_code": None},#경기
+    {"name": "신라", "seq": "167", "xgolf_code": None},#경기
+    {"name": "골프존H", "seq": "386", "xgolf_code": None},#경기
+    {"name": "레싸", "seq": "244", "xgolf_code": None},#경기
+    {"name": "중부", "seq": "74", "xgolf_code": None},#경기
+    {"name": "파인크리", "seq": "39", "xgolf_code": None},#경기
+    {"name": "코리아", "seq": "58", "xgolf_code": None},#경기
+    {"name": "리베라", "seq": "235", "xgolf_code": None},#경기
+    {"name": "골드", "seq": "307", "xgolf_code": None},#경기
+    {"name": "태광9", "seq": "52", "xgolf_code": None},#경기
+    {"name": "아세코9", "seq": "617", "xgolf_code": None},#경기
+    {"name": "코리아9", "seq": "474", "xgolf_code": None},#경기
+    {"name": "화성상록", "seq": "8", "xgolf_code": None},#경기
+    {"name": "은화삼", "seq": "99", "xgolf_code": None},#경기
+    {"name": "해솔리아", "seq": "442", "xgolf_code": None},#경기
+    {"name": "화성9", "seq": "360", "xgolf_code": None},#경기
+    {"name": "양지파인", "seq": "141", "xgolf_code": None},#경기
+    {"name": "한원", "seq": "19", "xgolf_code": None},#경기
+    {"name": "플라자용인", "seq": "30", "xgolf_code": None},#경기
+    {"name": "한림용인", "seq": "240", "xgolf_code": None},#경기
+    {"name": "화성상록", "seq": "8", "xgolf_code": None},#경기
+    {"name": "링크나인9", "seq": "233", "xgolf_code": None},#경기
+    {"name": "포웰", "seq": "113869", "xgolf_code": None},#경기
+    {"name": "발리오스", "seq": "224", "xgolf_code": None},#경기
+    {"name": "더크로스비", "seq": "114051", "xgolf_code": None},#경기
+    {"name": "써닝포인트", "seq": "441", "xgolf_code": None},#경기
+    {"name": "금강", "seq": "292", "xgolf_code": None},#경기
+    {"name": "남서울", "seq": "282", "xgolf_code": None},#경기
 ]
 
 def get_teescanner_prices(club_seq, club_name, date):
