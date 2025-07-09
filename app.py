@@ -23,19 +23,19 @@ GOLF_CLUBS = [
     {"name": "코리아", "seq": "58", "xgolf_code": None},#경기
     {"name": "리베라", "seq": "235", "xgolf_code": None},#경기
     {"name": "골드", "seq": "307", "xgolf_code": None},#경기
-    {"name": "태광9", "seq": "52", "xgolf_code": None},#경기
-    {"name": "아세코9", "seq": "617", "xgolf_code": None},#경기
+    #{"name": "태광9", "seq": "52", "xgolf_code": None},#경기
+    #{"name": "아세코9", "seq": "617", "xgolf_code": None},#경기
     {"name": "코리아9", "seq": "474", "xgolf_code": None},#경기
     {"name": "화성상록", "seq": "8", "xgolf_code": None},#경기
     {"name": "은화삼", "seq": "99", "xgolf_code": None},#경기
     {"name": "해솔리아", "seq": "442", "xgolf_code": None},#경기
-    {"name": "화성9", "seq": "360", "xgolf_code": None},#경기
+    #{"name": "화성9", "seq": "360", "xgolf_code": None},#경기
     {"name": "양지파인", "seq": "141", "xgolf_code": None},#경기
     {"name": "한원", "seq": "19", "xgolf_code": None},#경기
     {"name": "플라자용인", "seq": "30", "xgolf_code": None},#경기
     {"name": "한림용인", "seq": "240", "xgolf_code": None},#경기
     {"name": "화성상록", "seq": "8", "xgolf_code": None},#경기
-    {"name": "링크나인9", "seq": "233", "xgolf_code": None},#경기
+    #{"name": "링크나인9", "seq": "233", "xgolf_code": None},#경기
     {"name": "포웰", "seq": "113869", "xgolf_code": None},#경기
     {"name": "발리오스", "seq": "224", "xgolf_code": None},#경기
     {"name": "더크로스비", "seq": "114051", "xgolf_code": None},#경기
