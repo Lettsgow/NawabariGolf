@@ -128,7 +128,7 @@ td:first-child, th:first-child {
   backdrop-filter: blur(2px);
 }
 
-/* 🪟 모달 본문 */
+/* 🪟 모달 본문 - 스크롤만 추가 */
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -136,6 +136,10 @@ td:first-child, th:first-child {
   width: 300px;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  max-height: 80vh;       /* ✅ 스크롤 가능하게 제한 */
+  overflow-y: auto;       /* ✅ 내부 스크롤 생성 */
+  display: flex;
+  flex-direction: column;
 }
 
 /* 📋 구장 리스트 내 체크박스 라벨 */
@@ -146,8 +150,13 @@ td:first-child, th:first-child {
 
 /* ✅ 저장/취소 버튼 라인 */
 .modal-actions {
-  text-align: right;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
   margin-top: 10px;
+  text-align: right;
 }
 
 .modal-actions button {
