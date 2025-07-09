@@ -86,6 +86,7 @@ def get_ttime_grouped():
     start_date = data.get('start_date')
     end_date = data.get('end_date')
     hour_range = data.get('hour_range')
+    favorite_clubs = data.get('favorite_clubs')  # ✅ 추가
 
     try:
         start = datetime.strptime(start_date, "%Y-%m-%d")
@@ -96,6 +97,8 @@ def get_ttime_grouped():
     merged = []
 
     for club in GOLF_CLUBS:
+        if favorite_clubs and club['name'] not in favorite_clubs:  # ✅ 필터링 조건 추가
+            continue
         for n in range((end - start).days + 1):
             date = (start + timedelta(days=n)).strftime("%Y-%m-%d")
             tee_prices = get_teescanner_prices(club['seq'], club['name'], date)
