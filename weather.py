@@ -73,14 +73,14 @@ def nearest_base_time(now: datetime) -> str:
 
 # ─────────────────────── Main fetch ───────────────────────
 
-def fetch_weather(lat: float, lng: float, target_date: str | None = None) -> Dict[int, Dict[str, Any]]:
+def fetch_weather(lat: float, lng: float, base_date: str | None = None) -> Dict[int, Dict[str, Any]]:
     """Return hour→{desc, temp, rain} dict. target_date="YYYY-MM-DD"""
     if not SERVICE_KEY:
         print("[weather] ⚠️  KMA_API_KEY not set")
         return {}
 
     now = datetime.now()
-    base_date = target_date or now.strftime("%Y-%m-%d")
+    base_date = base_date or now.strftime("%Y-%m-%d")
     base_date_str = base_date.replace("-", "")
     base_time = nearest_base_time(now)
 
