@@ -1,38 +1,47 @@
+# app.py – Flask API (티타임 + 날씨 포함)
+"""
+변경점
+1. 캐시·라이브 데이터 모두 weather 필드를 포함.
+2. /get_ttime_grouped 응답에도 weather 전달 → 프론트에서 아이콘/텍스트 표시 가능.
+"""
+
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime, timedelta
 import os, json, threading
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
-from crawler import loop as crawler_loop  # 🌀 10분마다 캐시 저장하는 함수
+from crawler import loop as crawler_loop  # 백그라운드 크롤러
 
 app = Flask(__name__)
 DATA_DIR = "data"
 
-# 🔄 캐시 우선 조회 함수
-def crawl_from_cache_or_live(date_str, favorite):
+# ────────────────────────────── 헬퍼 ──────────────────────────────
+
+def crawl_from_cache_or_live(date_str: str, favorite):
+    """캐시가 있으면 읽고, 없으면 즉시 크롤링"""
     cache_file = os.path.join(DATA_DIR, f"{date_str}.json")
     if os.path.exists(cache_file):
-        print(f"📁 캐시 사용: {cache_file}")
         try:
             with open(cache_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                return [item for item in data if not favorite or item["golf"] in favorite]
+            # 선호 구장 필터
+            return [it for it in data if not favorite or it["golf"] in favorite]
         except Exception as e:
-            print(f"❌ 캐시 읽기 실패: {e}")
-    print(f"🌐 실시간 크롤링: {date_str}")
+            print("❌ 캐시 읽기 실패:", e)
+    # 실시간 Fallback
+    print("🌐 실시간 크롤링:", date_str)
     return crawl_teescan(date_str, favorite) + crawl_golfpang(date_str, favorite)
 
-# 🔌 메인 페이지
+# ────────────────────────────── 라우터 ──────────────────────────────
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# 📦 전체 골프장 이름 리스트 (설정 모달용)
 @app.route("/get_all_golfclubs")
 def get_all():
     return jsonify(sorted(c["name"] for c in GOLF_CLUBS))
 
-# 🏌️ 시간대 + 선호 구장 필터 기반 티타임 병합 조회
 @app.route("/get_ttime_grouped", methods=["POST"])
 def get_grouped():
     data = request.get_json()
@@ -41,12 +50,12 @@ def get_grouped():
     hour_range = data.get("hour_range")
     favorite   = data.get("favorite_clubs", [])
 
+    # 날짜 범위별 데이터 모으기
     consolidated = []
     for d in (start + timedelta(days=i) for i in range((end - start).days + 1)):
-        date_str = d.strftime("%Y-%m-%d")
-        consolidated += crawl_from_cache_or_live(date_str, favorite)
+        consolidated += crawl_from_cache_or_live(d.strftime("%Y-%m-%d"), favorite)
 
-    # ⛳ teescan 우선 병합
+    # ── teescan 우선, 최저가 선별 ──
     by_key = {}
     for it in consolidated:
         if hour_range and it["hour_num"] not in hour_range:
@@ -56,18 +65,22 @@ def get_grouped():
            (it["price"] == by_key[k]["price"] and it["source"] == "teescan"):
             by_key[k] = it
 
+    # 응답 포맷 (weather 포함)
     final = [{
-        "golf": v["golf"],
-        "date": datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
-        "hour": v["hour"],
-        "price": v["price"],
-        "source": v["source"],
-        "url": v["url"]
+        "golf"   : v["golf"],
+        "date"   : datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
+        "hour"   : v["hour"],
+        "hour_num": v["hour_num"],
+        "price"  : v["price"],
+        "source" : v["source"],
+        "url"    : v["url"],
+        "weather": v.get("weather")  # dict 또는 None
     } for v in by_key.values()]
     return jsonify(final)
 
+# ────────────────────────────── 실행 ──────────────────────────────
+
 if __name__ == "__main__":
-    # ✅ 크롤러 루프를 백그라운드 스레드로 실행
     threading.Thread(target=crawler_loop, daemon=True).start()
-    print("🟢 Flask + 캐시 크롤러 함께 실행 중...")
+    print("🟢 Flask 서버 + 크롤러 실행 중…")
     app.run(host="0.0.0.0", port=10000)

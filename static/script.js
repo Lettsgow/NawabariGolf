@@ -1,4 +1,4 @@
-// ✅ JS: 티타임 테이블 렌더링 (로그 추가 + 티스캐너 우선 + 아이콘 색상 수정)
+// ✅ JS: 티타임 테이블 렌더링 (날씨 아이콘 + 조건별 정보 표시)
 
 const hourCheckboxes = document.querySelectorAll(".hour-checkbox");
 const startDateInput = document.getElementById("start_date");
@@ -35,6 +35,16 @@ function getSortedKeys(grouped) {
 
 function formatToManWon(price) {
   return `${(price / 10000).toFixed(1)}`;
+}
+
+function getWeatherHTML(weather) {
+  if (!weather) return "";
+  const { desc, temp, rain } = weather;
+  if (desc.includes("비")) return `<div class="weather-info">☂️ ${rain.toFixed(1)}mm</div>`;
+  if (desc.includes("흐림")) return `<div class="weather-info">☁️ ${temp.toFixed(1)}°C</div>`;
+  if (desc.includes("구름")) return `<div class="weather-info">☁️ ${temp.toFixed(1)}°C</div>`;
+  if (desc.includes("맑음")) return `<div class="weather-info">☀️ ${temp.toFixed(1)}°C</div>`;
+  return "";
 }
 
 async function getGroupedTeeTime() {
@@ -109,7 +119,11 @@ function renderTeeTimeTable(data) {
         if (item.price === minPrice) td.classList.add("highlight");
         const iconColor = item.source === "teescan" ? "red" : "blue";
         const icon = `<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${iconColor};color:white;font-size:10px;line-height:14px;text-align:center;margin-right:3px;font-weight:bold;">${item.source === "teescan" ? "T" : "G"}</span>`;
-        td.innerHTML = `<div class="price-cell" data-url="${item.url}" style="cursor:pointer;">${icon}${formatToManWon(item.price)}</div>`;
+        const weatherHTML = getWeatherHTML(item.weather);
+        td.innerHTML = `<div class="price-cell" data-url="${item.url}" style="cursor:pointer; position:relative;">
+                          <div style="position:absolute;top:0;right:0;font-size:10px;">${weatherHTML}</div>
+                          ${icon}${formatToManWon(item.price)}
+                        </div>`;
       } else {
         td.textContent = "-";
       }
