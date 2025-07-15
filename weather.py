@@ -8,7 +8,7 @@ from typing import Dict, Any
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 기상청 단기예보 API 설정
-SERVICE_KEY = os.getenv("0pufYd46gOsX61f/gjCIhoD1jrtJcgclBVmFnsryJ5AxXV9g1+Td+26feW3O46x9tl0iIY7DJS12GFuHlraF4w==", "")
+SERVICE_KEY = os.getenv("KMA_API_KEY", "")
 VILAGE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 
 # ───────────────────────────── 좌표 변환 ─────────────────────────────
