@@ -1,4 +1,4 @@
-# weather.py – 기상청 단기예보(fetch) 모듈 (Render SSL 우회 포함 + 호출 딜레이)
+# weather.py – 기상청 단기예보(fetch) 모듈 (Render SSL 우회 포함)
 
 """
 Usage:
@@ -13,12 +13,12 @@ Return (dict):
     }
 """
 
-import os, math, requests, urllib3, time
+import os, math, requests, urllib3
 from datetime import datetime
 from typing import Dict, Any
 
 # ───────────────────────── API 설정 ─────────────────────────
-SERVICE_KEY = os.getenv("0pufYd46gOsX61f/gjCIhoD1jrtJcgclBVmFnsryJ5AxXV9g1+Td+26feW3O46x9tl0iIY7DJS12GFuHlraF4w==", "")  # ✅ 환경변수에서 읽기
+SERVICE_KEY = os.getenv("0pufYd46gOsX61f/gjCIhoD1jrtJcgclBVmFnsryJ5AxXV9g1+Td+26feW3O46x9tl0iIY7DJS12GFuHlraF4w==", "")  # Render 환경변수에서 읽기
 VILAGE_URL  = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 
 # Render SSL 오류 우회
@@ -73,7 +73,7 @@ def nearest_base_time(now: datetime) -> str:
 
 # ─────────────────────── Main fetch ───────────────────────
 
-def fetch_weather(lat: float, lng: float, base_date: str | None = None) -> Dict[int, Dict[str, Any]]:
+def fetch_weather(lat: float, lng: float, target_date: str | None = None) -> Dict[int, Dict[str, Any]]:
     """Return hour→{desc, temp, rain} dict. target_date="YYYY-MM-DD"""
     if not SERVICE_KEY:
         print("[weather] ⚠️  KMA_API_KEY not set")
@@ -98,9 +98,6 @@ def fetch_weather(lat: float, lng: float, base_date: str | None = None) -> Dict[
     }
 
     try:
-        # ✅ 요청 전 sleep 추가 (1.2초)
-        time.sleep(1.2)
-
         resp = requests.get(VILAGE_URL, params=params, timeout=6, verify=False)
         resp.raise_for_status()
         items = resp.json()["response"]["body"]["items"]["item"]
@@ -147,4 +144,5 @@ def fetch_weather(lat: float, lng: float, base_date: str | None = None) -> Dict[
 
 # ─────────────────────── Quick Test ───────────────────────
 if __name__ == "__main__":
-    print(fetch_weather(37.199742, 127.340926))
+    # 세현 골프장 좌표 예시
+    print(fetch_weather(37.199742, 127.340926)[:8])
