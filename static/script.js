@@ -144,6 +144,7 @@ function renderTeeTimeTable(data) {
 function getRegionByAddress(addr) {
   if (addr.startsWith("경기도")) return "경기";
   if (addr.startsWith("충청")) return "충청";
+  if (addr.startsWith("강원도")) return "강원";
   return "기타";
 }
 
@@ -157,7 +158,7 @@ function loadAllGolfclubs() {
       });
       // 모든 지역의 체크 상태를 한 번에 불러오기
       const favs = getFavoriteClubs();
-      ["경기", "충청", "기타"].forEach(region => {
+      ["경기", "충청", "강원", "기타"].forEach(region => {
         currentFavorites[region] = golfclubData.filter(c => c.region === region && favs.includes(c.name)).map(c => c.name);
       });
       renderGolfclubList(currentRegion);

@@ -67,6 +67,8 @@ def crawl_golfpang(date_str: str, favorite):
             sector = "5"
         elif address.startswith("충청북도") or address.startswith("충청남도"):
             sector = "4"
+        elif address.startswith("강원도"):
+            sector = "8"
         else:
             print(f"[Golfpang] {club['name']} 주소로 지역 판단 실패: {address}")
             continue
