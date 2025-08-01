@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import threading, time
+import threading, time, pickle, os
 import importlib.metadata
 import flask
 
@@ -19,9 +19,24 @@ CORS(app)
 
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
+CACHE_BACKUP_FILE = "memory_cache.pkl"
 
 REFRESH_INTERVAL = 1800  # 30분
 MAX_DAYS = 11  # 오늘부터 11일치
+
+def save_cache():
+    with CACHE_LOCK:
+        with open(CACHE_BACKUP_FILE, "wb") as f:
+            pickle.dump(MEMORY_CACHE, f)
+
+def load_cache():
+    global MEMORY_CACHE
+    if os.path.exists(CACHE_BACKUP_FILE):
+        with open(CACHE_BACKUP_FILE, "rb") as f:
+            MEMORY_CACHE = pickle.load(f)
+        print(f"📥 이전 캐시 로드 완료: {sum(len(v) for v in MEMORY_CACHE.values())}건")
+    else:
+        print("⚠️ 캐시 백업 파일 없음")
 
 def full_refresh_cache():
     today = datetime.now().date()
@@ -31,7 +46,6 @@ def full_refresh_cache():
             date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
             try:
                 items = crawl_teescan(date_str, favorite=[]) + crawl_golfpang(date_str, favorite=[])
-                # 캐시를 날리지 않기 위해, 성공적으로 크롤링된 경우만 갱신
                 if items is not None:
                     MEMORY_CACHE[date_str] = items
                     updated_count += len(items)
@@ -40,6 +54,7 @@ def full_refresh_cache():
                     print(f"⚠️ {date_str} 크롤링 결과 없음 (None), 기존 캐시 유지")
             except Exception as e:
                 print(f"❌ {date_str} 크롤링 실패, 기존 캐시 유지: {e}")
+        save_cache()
     print(f"🧠 캐시 새로고침 완료: 총 {updated_count}건")
 
 def refresher_loop():
@@ -58,6 +73,7 @@ def trigger_background_once():
     global has_started
     if not has_started:
         has_started = True
+        load_cache()
         threading.Thread(target=refresher_loop, daemon=True).start()
 
 def get_from_cache(date_str, favorite):
