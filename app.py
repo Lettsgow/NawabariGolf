@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import threading, time
+import threading, time, os
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
 
@@ -11,8 +11,8 @@ CORS(app)
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
 
-REFRESH_INTERVAL = 1800  # 11분
-MAX_DAYS = 9  # 오늘부터 10일치
+REFRESH_INTERVAL = 1800  # 30분
+MAX_DAYS = 11  # 오늘부터 11일치
 
 def full_refresh_cache():
     global MEMORY_CACHE
@@ -90,7 +90,8 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         if hour_range and it["hour_num"] not in hour_range:
             continue
         k = (it["golf"], it["date"], it["hour"])
-        if k not in by_key or (it["price"] < by_key[k]["price"]) or            (it["price"] == by_key[k]["price"] and it["source"] == "teescan"):
+        if k not in by_key or (it["price"] < by_key[k]["price"]) or \
+           (it["price"] == by_key[k]["price"] and it["source"] == "teescan"):
             by_key[k] = it
 
     result = [ {
@@ -116,7 +117,9 @@ def admin_refresh():
 
 if __name__ == "__main__":
     print("🚀 초기 캐시 로딩 중...")
-    full_refresh_cache()  # <-- 최초 1회 수동 호출
+    full_refresh_cache()  # 최초 1회 수동 호출
     threading.Thread(target=refresher_loop, daemon=True).start()
     print("🚀 Flask 서버 시작")
-    app.run(host="0.0.0.0", port=10000)
+
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
