@@ -21,8 +21,8 @@ MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
 CACHE_BACKUP_FILE = "memory_cache.pkl"
 
-REFRESH_INTERVAL = 1800  # 30분
-MAX_DAYS = 11  # 오늘부터 11일치
+REFRESH_INTERVAL = 900  # 30분
+MAX_DAYS = 7  # 오늘부터 11일치
 
 def save_cache():
     with CACHE_LOCK:
