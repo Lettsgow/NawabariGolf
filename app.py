@@ -2,8 +2,11 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import threading, time, os
+import flask
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
+
+print(f"✅ Flask version: {flask.__version__}")  # 디버깅용 출력
 
 app = Flask(__name__)
 CORS(app)
@@ -35,10 +38,16 @@ def refresher_loop():
             print("❌ 캐시 리프레시 실패:", e)
         time.sleep(REFRESH_INTERVAL)
 
-@app.before_first_request
-def activate_background_tasks():
-    threading.Thread(target=full_refresh_cache).start()
-    threading.Thread(target=refresher_loop, daemon=True).start()
+# ✅ gunicorn 환경에서도 동작하게 함
+has_started = False
+
+@app.before_request
+def trigger_background_once():
+    global has_started
+    if not has_started:
+        has_started = True
+        threading.Thread(target=full_refresh_cache).start()
+        threading.Thread(target=refresher_loop, daemon=True).start()
 
 def get_from_cache(date_str, favorite):
     with CACHE_LOCK:
@@ -119,8 +128,3 @@ def static_files(filename):
 def admin_refresh():
     threading.Thread(target=full_refresh_cache).start()
     return jsonify({"status": "refresh started"})
-
-if __name__ == "__main__":
-    print("🚀 Flask 서버 시작")
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
