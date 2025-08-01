@@ -1,12 +1,18 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import threading, time, os
+import threading, time
+import importlib.metadata
 import flask
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
 
-print(f"✅ Flask version: {flask.__version__}")
+# ✅ Flask version: Render 환경에서 deprecated 대응
+try:
+    version = importlib.metadata.version("flask")
+except Exception:
+    version = flask.__version__
+print(f"✅ Flask version: {version}")
 
 app = Flask(__name__)
 CORS(app)
@@ -19,18 +25,22 @@ MAX_DAYS = 11  # 오늘부터 11일치
 
 def full_refresh_cache():
     today = datetime.now().date()
-    temp_cache = {}
-
-    for i in range(MAX_DAYS):
-        date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
-        items = crawl_teescan(date_str, favorite=[]) + crawl_golfpang(date_str, favorite=[])
-        temp_cache[date_str] = items
-
+    updated_count = 0
     with CACHE_LOCK:
-        for date_str, items in temp_cache.items():
-            MEMORY_CACHE[date_str] = items
-
-    print(f"🧠 캐시 갱신 완료: {sum(len(v) for v in MEMORY_CACHE.values())}건")
+        for i in range(MAX_DAYS):
+            date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
+            try:
+                items = crawl_teescan(date_str, favorite=[]) + crawl_golfpang(date_str, favorite=[])
+                # 캐시를 날리지 않기 위해, 성공적으로 크롤링된 경우만 갱신
+                if items is not None:
+                    MEMORY_CACHE[date_str] = items
+                    updated_count += len(items)
+                    print(f"✅ {date_str} 캐시 갱신 완료 ({len(items)}건)")
+                else:
+                    print(f"⚠️ {date_str} 크롤링 결과 없음 (None), 기존 캐시 유지")
+            except Exception as e:
+                print(f"❌ {date_str} 크롤링 실패, 기존 캐시 유지: {e}")
+    print(f"🧠 캐시 새로고침 완료: 총 {updated_count}건")
 
 def refresher_loop():
     print("🔁 캐시 리프레시 루프 시작")
@@ -71,9 +81,9 @@ def get_grouped_teetime():
     print(f"📥 티타임 요청 파라미터: {data}")
 
     start = datetime.strptime(data["start_date"], "%Y-%m-%d")
-    end = datetime.strptime(data["end_date"], "%Y-%m-%d")
+    end   = datetime.strptime(data["end_date"],   "%Y-%m-%d")
     hour_range = data.get("hour_range")
-    favorite = data.get("favorite_clubs", [])
+    favorite   = data.get("favorite_clubs", [])
 
     return jsonify(get_consolidated_teetime(start, end, hour_range, favorite))
 
@@ -109,14 +119,14 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
            (it["price"] == by_key[k]["price"] and it["source"] == "teescan"):
             by_key[k] = it
 
-    result = [{
+    result = [ {
         "golf": v["golf"],
         "date": datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
         "hour": v["hour"],
         "price": v["price"],
         "source": v["source"],
         "url": v["url"]
-    } for v in by_key.values()]
+    } for v in by_key.values() ]
 
     print(f"📤 병합 결과: {len(result)}건")
     return result
