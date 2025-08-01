@@ -11,8 +11,8 @@ CORS(app)
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
 
-REFRESH_INTERVAL = 900  # 11분
-MAX_DAYS = 15  # 오늘부터 10일치
+REFRESH_INTERVAL = 1800  # 11분
+MAX_DAYS = 9  # 오늘부터 10일치
 
 def full_refresh_cache():
     global MEMORY_CACHE
@@ -115,6 +115,8 @@ def admin_refresh():
     return jsonify({"status": "refresh started"})
 
 if __name__ == "__main__":
+    print("🚀 초기 캐시 로딩 중...")
+    full_refresh_cache()  # <-- 최초 1회 수동 호출
     threading.Thread(target=refresher_loop, daemon=True).start()
     print("🚀 Flask 서버 시작")
     app.run(host="0.0.0.0", port=10000)
