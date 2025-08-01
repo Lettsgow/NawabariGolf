@@ -6,7 +6,7 @@ import flask
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
 
-print(f"✅ Flask version: {flask.__version__}")  # 디버깅용 출력
+print(f"✅ Flask version: {flask.__version__}")
 
 app = Flask(__name__)
 CORS(app)
@@ -18,16 +18,19 @@ REFRESH_INTERVAL = 1800  # 30분
 MAX_DAYS = 11  # 오늘부터 11일치
 
 def full_refresh_cache():
-    global MEMORY_CACHE
     today = datetime.now().date()
-    new_cache = {}
+    temp_cache = {}
+
     for i in range(MAX_DAYS):
         date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
         items = crawl_teescan(date_str, favorite=[]) + crawl_golfpang(date_str, favorite=[])
-        new_cache[date_str] = items
+        temp_cache[date_str] = items
+
     with CACHE_LOCK:
-        MEMORY_CACHE = new_cache
-    print(f"🧠 캐시 새로고침 완료: {sum(len(v) for v in MEMORY_CACHE.values())}건")
+        for date_str, items in temp_cache.items():
+            MEMORY_CACHE[date_str] = items
+
+    print(f"🧠 캐시 갱신 완료: {sum(len(v) for v in MEMORY_CACHE.values())}건")
 
 def refresher_loop():
     print("🔁 캐시 리프레시 루프 시작")
@@ -38,7 +41,6 @@ def refresher_loop():
             print("❌ 캐시 리프레시 실패:", e)
         time.sleep(REFRESH_INTERVAL)
 
-# ✅ gunicorn 환경에서도 동작하게 함
 has_started = False
 
 @app.before_request
@@ -46,7 +48,6 @@ def trigger_background_once():
     global has_started
     if not has_started:
         has_started = True
-        threading.Thread(target=full_refresh_cache).start()
         threading.Thread(target=refresher_loop, daemon=True).start()
 
 def get_from_cache(date_str, favorite):
@@ -70,9 +71,9 @@ def get_grouped_teetime():
     print(f"📥 티타임 요청 파라미터: {data}")
 
     start = datetime.strptime(data["start_date"], "%Y-%m-%d")
-    end   = datetime.strptime(data["end_date"],   "%Y-%m-%d")
+    end = datetime.strptime(data["end_date"], "%Y-%m-%d")
     hour_range = data.get("hour_range")
-    favorite   = data.get("favorite_clubs", [])
+    favorite = data.get("favorite_clubs", [])
 
     return jsonify(get_consolidated_teetime(start, end, hour_range, favorite))
 
@@ -108,14 +109,14 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
            (it["price"] == by_key[k]["price"] and it["source"] == "teescan"):
             by_key[k] = it
 
-    result = [ {
+    result = [{
         "golf": v["golf"],
         "date": datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
         "hour": v["hour"],
         "price": v["price"],
         "source": v["source"],
         "url": v["url"]
-    } for v in by_key.values() ]
+    } for v in by_key.values()]
 
     print(f"📤 병합 결과: {len(result)}건")
     return result
