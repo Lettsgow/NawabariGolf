@@ -35,6 +35,11 @@ def refresher_loop():
             print("❌ 캐시 리프레시 실패:", e)
         time.sleep(REFRESH_INTERVAL)
 
+@app.before_first_request
+def activate_background_tasks():
+    threading.Thread(target=full_refresh_cache).start()
+    threading.Thread(target=refresher_loop, daemon=True).start()
+
 def get_from_cache(date_str, favorite):
     with CACHE_LOCK:
         base = MEMORY_CACHE.get(date_str, [])
@@ -116,10 +121,6 @@ def admin_refresh():
     return jsonify({"status": "refresh started"})
 
 if __name__ == "__main__":
-    print("🚀 Flask 서버 시작 전 포트 오픈")
-    port = int(os.environ.get("PORT", 10000))
-    threading.Thread(target=app.run, kwargs={"host": "0.0.0.0", "port": port}, daemon=True).start()
-    print(f"🌐 Flask 포트: {port}")
-
-    threading.Thread(target=full_refresh_cache).start()
-    threading.Thread(target=refresher_loop, daemon=True).start()
+    print("🚀 Flask 서버 시작")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
