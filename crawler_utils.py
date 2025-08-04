@@ -1,4 +1,3 @@
-# crawler_utils.py
 import requests, json, os
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -18,21 +17,27 @@ def crawl_teescan(date_str: str, favorite):
     )
     headers = {"User-Agent": "Mozilla/5.0"}
     res = []
+    visited = set()
+
     for club in GOLF_CLUBS:
-        if favorite and club["name"] not in favorite:
+        name = club.get("name")
+        if not name or name in visited:
             continue
+        visited.add(name)
+
         seq = club.get("seq")
         if not seq:
             continue
+
         try:
             r = requests.get(url_tpl.format(seq=seq), headers=headers, timeout=6)
             items = r.json().get("data", {}).get("teeTimeList", [])
-            print(f"[Teescan] {club['name']} {date_str} ▶ {len(items)}")
+            print(f"[Teescan] {name} {date_str} ▶ {len(items)}")
             for it in items:
                 price = int(it["price"])
                 h = int(it["teetime_time"].split(":")[0])
                 res.append({
-                    "golf": club["name"],
+                    "golf": name,
                     "date": date_str,
                     "hour": f"{h:02d}시대",
                     "hour_num": h,
@@ -42,7 +47,7 @@ def crawl_teescan(date_str: str, favorite):
                     "source": "teescan"
                 })
         except Exception as e:
-            print(f"[Teescan] {club['name']} 오류: {e}")
+            print(f"[Teescan] {name} 오류: {e}")
     return res
 
 
@@ -53,10 +58,13 @@ def crawl_golfpang(date_str: str, favorite):
         "Accept": "*/*",
     }
     res = []
+    visited = set()
 
     for club in GOLF_CLUBS:
-        if favorite and club["name"] not in favorite:
+        name = club.get("name")
+        if not name or name in visited:
             continue
+        visited.add(name)
 
         code = club.get("Golpang_code")
         if not code:
@@ -65,12 +73,12 @@ def crawl_golfpang(date_str: str, favorite):
         address = club.get("address", "")
         if address.startswith("경기도"):
             sector = "5"
-        elif address.startswith("충청북도") or address.startswith("충청남도"):
+        elif address.startswith("충청"):
             sector = "4"
-        elif address.startswith("강원도"):
+        elif address.startswith("강원"):
             sector = "8"
         else:
-            print(f"[Golfpang] {club['name']} 주소로 지역 판단 실패: {address}")
+            print(f"[Golfpang] {name} 주소로 지역 판단 실패: {address}")
             continue
 
         page = 1
@@ -91,7 +99,7 @@ def crawl_golfpang(date_str: str, favorite):
                 if not rows:
                     break
 
-                print(f"[Golfpang] {club['name']} {date_str} sector {sector} page {page} ▶ {len(rows)}")
+                print(f"[Golfpang] {name} {date_str} sector {sector} page {page} ▶ {len(rows)}")
 
                 for row in rows:
                     cols = row.select("td")
@@ -103,7 +111,7 @@ def crawl_golfpang(date_str: str, favorite):
                         continue
                     price = int(price_tag.text.replace(",", ""))
                     res.append({
-                        "golf": club["name"],
+                        "golf": name,
                         "date": date_str,
                         "hour": f"{hour_num:02d}시대",
                         "hour_num": hour_num,
@@ -115,7 +123,7 @@ def crawl_golfpang(date_str: str, favorite):
 
                 page += 1
             except Exception as e:
-                print(f"[Golfpang] {club['name']} sector {sector} page {page} 오류: {e}")
+                print(f"[Golfpang] {name} sector {sector} page {page} 오류: {e}")
                 break
 
     return res
