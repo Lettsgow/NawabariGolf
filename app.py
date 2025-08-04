@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import threading, time
+import threading, time, os
 import importlib.metadata
 import flask
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
 
+# 버전 확인용 출력
 try:
     version = importlib.metadata.version("flask")
 except Exception:
@@ -50,7 +51,7 @@ def refresher_loop():
             print("❌ 캐시 리프레시 스레드 오류:", e)
         time.sleep(REFRESH_INTERVAL)
 
-# ✅ 서버 실행 시 즉시 한 번 캐시 수집 + 주기적 쓰레드 시작
+# ✅ 서버 실행 시 즉시 1회 수집 + 주기적 캐시 쓰레드 실행
 full_refresh_cache()
 threading.Thread(target=refresher_loop, daemon=True).start()
 
@@ -136,5 +137,7 @@ def admin_refresh():
     threading.Thread(target=full_refresh_cache).start()
     return jsonify({"status": "refresh started"})
 
+# ✅ Render에서 필수: 포트는 환경변수 PORT 사용 + host=0.0.0.0
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
