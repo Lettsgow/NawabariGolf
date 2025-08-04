@@ -21,7 +21,6 @@ CACHE_LOCK = threading.Lock()
 REFRESH_INTERVAL = 1800  # 30분
 MAX_DAYS = 9
 
-
 def full_refresh_cache():
     today = datetime.now().date()
     updated_count = 0
@@ -29,10 +28,8 @@ def full_refresh_cache():
         for i in range(MAX_DAYS):
             date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
             try:
-                # ✅ teescan과 golfpang 각각 한번만 호출
                 teescan_items = crawl_teescan(date_str, favorite=[])
                 golfpang_items = crawl_golfpang(date_str, favorite=[])
-
                 items = teescan_items + golfpang_items
                 if items:
                     MEMORY_CACHE[date_str] = items
@@ -44,10 +41,8 @@ def full_refresh_cache():
                 print(f"❌ {date_str} 크롤링 실패: {e}")
         print(f"🧠 캐시 전체 갱신 완료: {updated_count}건")
 
-
 def refresher_loop():
     print("🔁 캐시 리프레시 스레드 시작")
-    time.sleep(10)
     while True:
         try:
             full_refresh_cache()
@@ -55,6 +50,9 @@ def refresher_loop():
             print("❌ 캐시 리프레시 스레드 오류:", e)
         time.sleep(REFRESH_INTERVAL)
 
+# ✅ 서버 실행 시 즉시 한 번 캐시 수집 + 주기적 쓰레드 시작
+full_refresh_cache()
+threading.Thread(target=refresher_loop, daemon=True).start()
 
 def get_from_cache(date_str, favorite):
     print(f"🔍 get_from_cache: {date_str}")
@@ -64,18 +62,15 @@ def get_from_cache(date_str, favorite):
         print(f"🧠 캐시 {date_str} → 필터 후 {len(filtered)}건")
         return filtered
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/get_all_golfclubs")
 def get_all_golfclubs():
     names = sorted(c["name"] for c in GOLF_CLUBS)
     print(f"📃 골프장 리스트 반환: {len(names)}개")
     return jsonify(names)
-
 
 @app.route("/get_ttime_grouped", methods=["POST"])
 def get_grouped_teetime():
@@ -93,7 +88,6 @@ def get_grouped_teetime():
         print(f"❌ 요청 처리 실패: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/get_ttime_grouped", methods=["GET"])
 def get_grouped_teetime_gpt():
     start_str = request.args.get("start_date")
@@ -106,7 +100,6 @@ def get_grouped_teetime_gpt():
     except Exception as e:
         return jsonify({"error": f"Invalid date format: {e}"}), 400
     return jsonify(get_consolidated_teetime(start, end, None, []))
-
 
 def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     consolidated = []
@@ -134,18 +127,14 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         url=v["url"]
     ) for v in by_key.values()]
 
-
 @app.route("/static/<path:filename>")
 def static_files(filename):
     return send_from_directory("static", filename)
-
 
 @app.route("/admin/refresh", methods=["POST"])
 def admin_refresh():
     threading.Thread(target=full_refresh_cache).start()
     return jsonify({"status": "refresh started"})
 
-
 if __name__ == "__main__":
-    threading.Thread(target=refresher_loop, daemon=True).start()
     app.run(host="127.0.0.1", port=5000, debug=True)
