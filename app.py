@@ -42,11 +42,13 @@ def refresher_loop():
             print("❌ 캐시 리프레시 스레드 오류:", e)
         time.sleep(REFRESH_INTERVAL)
 
-@app.before_first_request
-def startup():
-    print("🚀 최초 요청 → 캐시 수집 + 쓰레드 시작")
+# ✅ 앱 시작 시 바로 캐시 수집 + 쓰레드 실행
+def startup_all():
+    print("🚀 서버 시작 → 캐시 수집 및 쓰레드 실행")
     full_refresh_cache()
     threading.Thread(target=refresher_loop, daemon=True).start()
+
+startup_all()
 
 @app.route("/")
 def index():
@@ -79,7 +81,7 @@ def get_grouped_teetime_gpt():
         start = datetime.strptime(start_str, "%Y-%m-%d")
         end = datetime.strptime(end_str, "%Y-%m-%d")
     except Exception as e:
-        return jsonify({"error": f"Invalid date format: {e}"}), 400
+        return jsonify({"error": f"Invalid date format: {e)}"}), 400
     return jsonify(get_consolidated_teetime(start, end, None, []))
 
 def get_from_cache(date_str, favorite):
