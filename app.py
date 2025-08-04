@@ -2,17 +2,8 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import threading, time, os
-import importlib.metadata
-import flask
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
-
-# 버전 확인용 출력
-try:
-    version = importlib.metadata.version("flask")
-except Exception:
-    version = flask.__version__
-print(f"✅ Flask version: {version}")
 
 app = Flask(__name__)
 CORS(app)
@@ -51,17 +42,11 @@ def refresher_loop():
             print("❌ 캐시 리프레시 스레드 오류:", e)
         time.sleep(REFRESH_INTERVAL)
 
-# ✅ 서버 실행 시 즉시 1회 수집 + 주기적 캐시 쓰레드 실행
-full_refresh_cache()
-threading.Thread(target=refresher_loop, daemon=True).start()
-
-def get_from_cache(date_str, favorite):
-    print(f"🔍 get_from_cache: {date_str}")
-    with CACHE_LOCK:
-        base = MEMORY_CACHE.get(date_str, [])
-        filtered = [item for item in base if not favorite or item["golf"] in favorite]
-        print(f"🧠 캐시 {date_str} → 필터 후 {len(filtered)}건")
-        return filtered
+@app.before_first_request
+def startup():
+    print("🚀 최초 요청 → 캐시 수집 + 쓰레드 시작")
+    full_refresh_cache()
+    threading.Thread(target=refresher_loop, daemon=True).start()
 
 @app.route("/")
 def index():
@@ -70,23 +55,18 @@ def index():
 @app.route("/get_all_golfclubs")
 def get_all_golfclubs():
     names = sorted(c["name"] for c in GOLF_CLUBS)
-    print(f"📃 골프장 리스트 반환: {len(names)}개")
     return jsonify(names)
 
 @app.route("/get_ttime_grouped", methods=["POST"])
 def get_grouped_teetime():
     try:
         data = request.get_json()
-        print(f"📥 요청: {data}")
         start = datetime.strptime(data["start_date"], "%Y-%m-%d")
         end = datetime.strptime(data["end_date"], "%Y-%m-%d")
         hour_range = data.get("hour_range")
         favorite = data.get("favorite_clubs", [])
-        result = get_consolidated_teetime(start, end, hour_range, favorite)
-        print(f"📤 응답: {len(result)}건")
-        return jsonify(result)
+        return jsonify(get_consolidated_teetime(start, end, hour_range, favorite))
     except Exception as e:
-        print(f"❌ 요청 처리 실패: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_ttime_grouped", methods=["GET"])
@@ -102,22 +82,25 @@ def get_grouped_teetime_gpt():
         return jsonify({"error": f"Invalid date format: {e}"}), 400
     return jsonify(get_consolidated_teetime(start, end, None, []))
 
+def get_from_cache(date_str, favorite):
+    with CACHE_LOCK:
+        base = MEMORY_CACHE.get(date_str, [])
+        return [item for item in base if not favorite or item["golf"] in favorite]
+
 def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     consolidated = []
     for d in (start + timedelta(days=i) for i in range((end - start).days + 1)):
-        date_str = d.strftime("%Y-%m-%d")
-        consolidated += get_from_cache(date_str, favorite)
-
+        consolidated += get_from_cache(d.strftime("%Y-%m-%d"), favorite)
     by_key = {}
     for it in consolidated:
         try:
             h = int(it["hour_num"])
+            if hour_range and h not in hour_range:
+                continue
         except:
             continue
-        if hour_range and h not in hour_range:
-            continue
         k = (it["golf"], it["date"], it["hour"])
-        if k not in by_key or (it["price"] < by_key[k]["price"]):
+        if k not in by_key or it["price"] < by_key[k]["price"]:
             by_key[k] = it
     return [dict(
         golf=v["golf"],
@@ -137,7 +120,6 @@ def admin_refresh():
     threading.Thread(target=full_refresh_cache).start()
     return jsonify({"status": "refresh started"})
 
-# ✅ Render에서 필수: 포트는 환경변수 PORT 사용 + host=0.0.0.0
-if __name__ == "__main__" or __name__ != "__main__":
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
