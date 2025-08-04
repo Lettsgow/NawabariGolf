@@ -138,6 +138,6 @@ def admin_refresh():
     return jsonify({"status": "refresh started"})
 
 # ✅ Render에서 필수: 포트는 환경변수 PORT 사용 + host=0.0.0.0
-if __name__ == "__main__":
+if __name__ == "__main__" or __name__ != "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
