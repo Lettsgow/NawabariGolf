@@ -42,11 +42,9 @@ def refresher_loop():
             print("❌ 캐시 리프레시 스레드 오류:", e)
         time.sleep(REFRESH_INTERVAL)
 
-# ✅ 캐시 작업을 백그라운드로 시작
 def startup_background():
     def _start():
-        print("🚀 캐시 수집 쓰레드 시작")
-        full_refresh_cache()
+        print("🚀 백그라운드 캐시 갱신 시작")
         threading.Thread(target=refresher_loop, daemon=True).start()
     threading.Thread(target=_start, daemon=True).start()
 
@@ -128,9 +126,10 @@ def admin_refresh():
     threading.Thread(target=full_refresh_cache).start()
     return jsonify({"status": "refresh started"})
 
-# ✅ Render에서 포트 감지 실패 방지를 위해 즉시 서버 실행
 if __name__ == "__main__":
-    startup_background()  # 캐시는 백그라운드로
+    print("🚀 메인 프로세스: 캐시 1회 수집 시작")
+    full_refresh_cache()             # ✅ 반드시 메인에서 한 번 수집
+    startup_background()            # ✅ 주기적 캐시 수집 백그라운드 실행
     port = int(os.environ.get("PORT", 5000))
     print(f"🌐 Flask 서버 실행 시작: 포트 {port}")
     app.run(host="0.0.0.0", port=port)
