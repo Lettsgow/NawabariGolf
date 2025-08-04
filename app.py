@@ -10,8 +10,7 @@ CORS(app)
 
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
-REFRESH_INTERVAL = 1800  # 30분
-MAX_DAYS = 9
+MAX_DAYS = 15
 
 def full_refresh_cache():
     today = datetime.now().date()
@@ -33,19 +32,13 @@ def full_refresh_cache():
                 print(f"❌ {date_str} 크롤링 실패: {e}")
         print(f"🧠 캐시 전체 갱신 완료: {updated_count}건")
 
-def refresher_loop():
-    print("🔁 캐시 리프레시 스레드 시작")
-    while True:
+def run_async_refresh_once():
+    def _start():
+        print("🚀 서버 부팅 후 1회 캐시 수집 시작")
         try:
             full_refresh_cache()
         except Exception as e:
-            print("❌ 캐시 리프레시 스레드 오류:", e)
-        time.sleep(REFRESH_INTERVAL)
-
-def startup_background():
-    def _start():
-        print("🚀 백그라운드 캐시 갱신 시작")
-        threading.Thread(target=refresher_loop, daemon=True).start()
+            print("❌ 초기 캐시 수집 실패:", e)
     threading.Thread(target=_start, daemon=True).start()
 
 @app.route("/")
@@ -127,9 +120,7 @@ def admin_refresh():
     return jsonify({"status": "refresh started"})
 
 if __name__ == "__main__":
-    print("🚀 메인 프로세스: 캐시 1회 수집 시작")
-    full_refresh_cache()             # ✅ 반드시 메인에서 한 번 수집
-    startup_background()            # ✅ 주기적 캐시 수집 백그라운드 실행
+    run_async_refresh_once()  # ✅ 부팅 시 1회 캐시 수집 (비동기)
     port = int(os.environ.get("PORT", 5000))
     print(f"🌐 Flask 서버 실행 시작: 포트 {port}")
     app.run(host="0.0.0.0", port=port)

@@ -26,7 +26,17 @@ window.onload = () => {
       golfclubMeta = d;
       loadAllGolfclubs();
     });
+
+  // ✅ 1시간마다 자동으로 /admin/refresh 호출
+  triggerAutoRefresh(); // 최초 1회
+  setInterval(triggerAutoRefresh, 60 * 60 * 1000); // 매 1시간마다
 };
+
+function triggerAutoRefresh() {
+  fetch("/admin/refresh", { method: "POST" })
+    .then(() => console.log("🔁 /admin/refresh 자동 호출 완료"))
+    .catch(err => console.error("❌ 자동 갱신 실패:", err));
+}
 
 function getTimeNumber(hourStr) {
   const match = hourStr.match(/(\d{1,2})시대/);
@@ -144,7 +154,7 @@ function renderTeeTimeTable(data) {
 function getRegionByAddress(addr) {
   if (addr.startsWith("경기도")) return "경기";
   if (addr.startsWith("충청")) return "충청";
-  if (addr.startsWith("강원도")) return "강원";
+  if (addr.startsWith("강원")) return "강원";
   return "기타";
 }
 
@@ -184,7 +194,6 @@ function renderGolfclubList(region) {
 function selectAllCurrentRegion(select) {
   const checkboxes = golfclubList.querySelectorAll("input[type='checkbox']");
   checkboxes.forEach(cb => { cb.checked = select });
-  // 선택 상태 갱신
   currentFavorites[currentRegion] = select ? golfclubData.filter(c => c.region === currentRegion).map(c => c.name) : [];
 }
 
