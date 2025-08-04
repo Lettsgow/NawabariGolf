@@ -87,9 +87,13 @@ def get_grouped_teetime_gpt():
 def get_from_cache(date_str, favorite):
     with CACHE_LOCK:
         base = MEMORY_CACHE.get(date_str, [])
-        return [item for item in base if not favorite or item["golf"] in favorite]
+        print(f"🔍 캐시 요청: {date_str}, 전체 {len(base)}건")
+        filtered = [item for item in base if not favorite or item["golf"] in favorite]
+        print(f"🧠 캐시 {date_str} → 필터 후 {len(filtered)}건")
+        return filtered
 
 def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
+    print(f"📅 통합 티타임 조회: {start} ~ {end}, 시간 필터: {hour_range}, 선호: {favorite}")
     consolidated = []
     for d in (start + timedelta(days=i) for i in range((end - start).days + 1)):
         consolidated += get_from_cache(d.strftime("%Y-%m-%d"), favorite)
@@ -104,7 +108,7 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         k = (it["golf"], it["date"], it["hour"])
         if k not in by_key or it["price"] < by_key[k]["price"]:
             by_key[k] = it
-    return [dict(
+    result = [dict(
         golf=v["golf"],
         date=datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
         hour=v["hour"],
@@ -112,6 +116,8 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         source=v["source"],
         url=v["url"]
     ) for v in by_key.values()]
+    print(f"📤 최종 결과 {len(result)}건 반환")
+    return result
 
 @app.route("/static/<path:filename>")
 def static_files(filename):
