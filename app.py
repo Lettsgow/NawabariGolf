@@ -57,7 +57,7 @@ def get_all_golfclubs():
 @app.route("/get_ttime_grouped", methods=["POST"])
 def get_grouped_teetime():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         print("📥 POST 요청 수신:", data)  # 🔍 요청 받은 데이터 출력
 
         start = datetime.strptime(data["start_date"], "%Y-%m-%d")
