@@ -10,7 +10,7 @@ CORS(app)
 
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
-MAX_DAYS = 3
+MAX_DAYS = 18
 
 def full_refresh_cache():
     today = datetime.now().date()
