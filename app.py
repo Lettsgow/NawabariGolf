@@ -30,6 +30,10 @@ def full_refresh_cache():
                     print(f"⚠️ {date_str} 크롤링 결과 없음")
             except Exception as e:
                 print(f"❌ {date_str} 크롤링 실패: {e}")
+
+        print("🧠 MEMORY_CACHE keys:", list(MEMORY_CACHE.keys()))
+        for k, v in MEMORY_CACHE.items():
+            print(f"📅 {k}: {len(v)}건 저장됨")
         print(f"🧠 캐시 전체 갱신 완료: {updated_count}건")
 
 def run_async_refresh_once():
