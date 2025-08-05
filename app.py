@@ -10,39 +10,54 @@ CORS(app)
 
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
-MAX_DAYS = 13
+MAX_DAYS = 3
 
 def full_refresh_cache():
     today = datetime.now().date()
     updated_count = 0
-    with CACHE_LOCK:
-        for i in range(MAX_DAYS):
-            date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
-            try:
-                teescan_items = crawl_teescan(date_str, favorite=[])
-                golfpang_items = crawl_golfpang(date_str, favorite=[])
-                items = teescan_items + golfpang_items
-                if items:
-                    MEMORY_CACHE[date_str] = items
-                    updated_count += len(items)
-                    print(f"✅ {date_str} 커시 갱신 완료 ({len(items)}건)")
-                else:
-                    print(f"⚠️ {date_str} 크로링 결과 없음")
-            except Exception as e:
-                print(f"❌ {date_str} 크로링 실패: {e}")
 
-        print("🧠 MEMORY_CACHE keys:", list(MEMORY_CACHE.keys()))
-        for k, v in MEMORY_CACHE.items():
-            print(f"📅 {k}: {len(v)}건 저장됨")
-        print(f"🧠 커시 전체 갱신 완료: {updated_count}건")
+    for i in range(MAX_DAYS):
+        date_str = (today + timedelta(days=i)).strftime("%Y-%m-%d")
+        try:
+            teescan_items = crawl_teescan(date_str, favorite=[])
+            golfpang_items = crawl_golfpang(date_str, favorite=[])
+            items = teescan_items + golfpang_items
+
+            if items:
+                got_lock = CACHE_LOCK.acquire(timeout=5)
+                if got_lock:
+                    try:
+                        MEMORY_CACHE[date_str] = items
+                        updated_count += len(items)
+                        print(f"✅ {date_str} 캐시 갱신 완료 ({len(items)}건)")
+                    finally:
+                        CACHE_LOCK.release()
+                else:
+                    print(f"⛔️ {date_str} 캐시 갱신 실패 - 락 획득 실패")
+            else:
+                print(f"⚠️ {date_str} 크롤링 결과 없음")
+
+        except Exception as e:
+            print(f"❌ {date_str} 크롤링 실패: {e}")
+
+    got_lock = CACHE_LOCK.acquire(timeout=5)
+    if got_lock:
+        try:
+            print("🧠 MEMORY_CACHE keys:", list(MEMORY_CACHE.keys()))
+            for k, v in MEMORY_CACHE.items():
+                print(f"📅 {k}: {len(v)}건 저장됨")
+        finally:
+            CACHE_LOCK.release()
+
+    print(f"🧠 전체 캐시 갱신 완료: {updated_count}건")
 
 def run_async_refresh_once():
     def _start():
-        print("🚀 서버 부팅 후 1회 커시 수집 시작")
+        print("🚀 서버 부팅 후 1회 캐시 수집 시작")
         try:
             full_refresh_cache()
         except Exception as e:
-            print("❌ 초기 커시 수집 실패:", e)
+            print("❌ 초기 캐시 수집 실패:", e)
     threading.Thread(target=_start, daemon=True).start()
 
 @app.route("/")
@@ -86,14 +101,14 @@ def get_grouped_teetime_gpt():
 def get_from_cache(date_str, favorite):
     got_lock = CACHE_LOCK.acquire(timeout=3)
     if not got_lock:
-        print(f"⛔️ {date_str} 커시 잠굴 통출 실패 - 다른 작업 중")
+        print(f"⛔️ {date_str} 캐시 잠금 획득 실패 - 다른 작업 중")
         return []
 
     try:
         base = MEMORY_CACHE.get(date_str, [])
-        print(f"🔍 커시 요청: {date_str}, 전체 {len(base)}건")
+        print(f"🔍 캐시 요청: {date_str}, 전체 {len(base)}건")
         filtered = [item for item in base if not favorite or item["golf"] in favorite]
-        print(f"🧠 커시 {date_str} → 필터 후 {len(filtered)}건")
+        print(f"🧠 캐시 {date_str} → 필터 후 {len(filtered)}건")
         return filtered
     finally:
         CACHE_LOCK.release()
@@ -102,8 +117,9 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     print(f"📅 통합 티타임 조회: {start} ~ {end}, 시간 필터: {hour_range}, 선호: {favorite}")
     consolidated = []
     for d in (start + timedelta(days=i) for i in range((end - start).days + 1)):
-        print(f"🔁 날짜 루프 짱입: {d.strftime('%Y-%m-%d')}")
+        print(f"🔁 날짜 루프 진입: {d.strftime('%Y-%m-%d')}")
         consolidated += get_from_cache(d.strftime("%Y-%m-%d"), favorite)
+
     by_key = {}
     for it in consolidated:
         try:
@@ -115,6 +131,7 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         k = (it["golf"], it["date"], it["hour"])
         if k not in by_key or it["price"] < by_key[k]["price"]:
             by_key[k] = it
+
     result = [dict(
         golf=v["golf"],
         date=datetime.strptime(v["date"], "%Y-%m-%d").strftime("%m/%d"),
@@ -123,7 +140,7 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         source=v["source"],
         url=v["url"]
     ) for v in by_key.values()]
-    print(f"📤 최종 결과 {len(result)}건 발환")
+    print(f"📤 최종 결과 {len(result)}건 반환")
     return result
 
 @app.route("/static/<path:filename>")
@@ -132,7 +149,10 @@ def static_files(filename):
 
 @app.route("/admin/refresh", methods=["POST"])
 def admin_refresh():
-    threading.Thread(target=full_refresh_cache).start()
+    def _refresh_task():
+        print("🔧 수동 캐시 갱신 요청 수신됨")
+        full_refresh_cache()
+    threading.Thread(target=_refresh_task, daemon=True).start()
     return jsonify({"status": "refresh started"})
 
 if __name__ == "__main__":
