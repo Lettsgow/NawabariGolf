@@ -10,7 +10,7 @@ CORS(app)
 
 MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
-MAX_DAYS = 15
+MAX_DAYS = 13
 
 def full_refresh_cache():
     today = datetime.now().date()
@@ -25,24 +25,24 @@ def full_refresh_cache():
                 if items:
                     MEMORY_CACHE[date_str] = items
                     updated_count += len(items)
-                    print(f"✅ {date_str} 캐시 갱신 완료 ({len(items)}건)")
+                    print(f"✅ {date_str} 커시 갱신 완료 ({len(items)}건)")
                 else:
-                    print(f"⚠️ {date_str} 크롤링 결과 없음")
+                    print(f"⚠️ {date_str} 크로링 결과 없음")
             except Exception as e:
-                print(f"❌ {date_str} 크롤링 실패: {e}")
+                print(f"❌ {date_str} 크로링 실패: {e}")
 
         print("🧠 MEMORY_CACHE keys:", list(MEMORY_CACHE.keys()))
         for k, v in MEMORY_CACHE.items():
             print(f"📅 {k}: {len(v)}건 저장됨")
-        print(f"🧠 캐시 전체 갱신 완료: {updated_count}건")
+        print(f"🧠 커시 전체 갱신 완료: {updated_count}건")
 
 def run_async_refresh_once():
     def _start():
-        print("🚀 서버 부팅 후 1회 캐시 수집 시작")
+        print("🚀 서버 부팅 후 1회 커시 수집 시작")
         try:
             full_refresh_cache()
         except Exception as e:
-            print("❌ 초기 캐시 수집 실패:", e)
+            print("❌ 초기 커시 수집 실패:", e)
     threading.Thread(target=_start, daemon=True).start()
 
 @app.route("/")
@@ -58,7 +58,7 @@ def get_all_golfclubs():
 def get_grouped_teetime():
     try:
         data = request.get_json(force=True)
-        print("📥 POST 요청 수신:", data)  # 🔍 요청 받은 데이터 출력
+        print("📥 POST 요청 수신:", data)
 
         start = datetime.strptime(data["start_date"], "%Y-%m-%d")
         end = datetime.strptime(data["end_date"], "%Y-%m-%d")
@@ -67,7 +67,7 @@ def get_grouped_teetime():
 
         return jsonify(get_consolidated_teetime(start, end, hour_range, favorite))
     except Exception as e:
-        print("❌ API 오류:", e)  # 🔥 여기 추가
+        print("❌ API 오류:", e)
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_ttime_grouped", methods=["GET"])
@@ -84,17 +84,25 @@ def get_grouped_teetime_gpt():
     return jsonify(get_consolidated_teetime(start, end, None, []))
 
 def get_from_cache(date_str, favorite):
-    with CACHE_LOCK:
+    got_lock = CACHE_LOCK.acquire(timeout=3)
+    if not got_lock:
+        print(f"⛔️ {date_str} 커시 잠굴 통출 실패 - 다른 작업 중")
+        return []
+
+    try:
         base = MEMORY_CACHE.get(date_str, [])
-        print(f"🔍 캐시 요청: {date_str}, 전체 {len(base)}건")
+        print(f"🔍 커시 요청: {date_str}, 전체 {len(base)}건")
         filtered = [item for item in base if not favorite or item["golf"] in favorite]
-        print(f"🧠 캐시 {date_str} → 필터 후 {len(filtered)}건")
+        print(f"🧠 커시 {date_str} → 필터 후 {len(filtered)}건")
         return filtered
+    finally:
+        CACHE_LOCK.release()
 
 def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     print(f"📅 통합 티타임 조회: {start} ~ {end}, 시간 필터: {hour_range}, 선호: {favorite}")
     consolidated = []
     for d in (start + timedelta(days=i) for i in range((end - start).days + 1)):
+        print(f"🔁 날짜 루프 짱입: {d.strftime('%Y-%m-%d')}")
         consolidated += get_from_cache(d.strftime("%Y-%m-%d"), favorite)
     by_key = {}
     for it in consolidated:
@@ -115,7 +123,7 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
         source=v["source"],
         url=v["url"]
     ) for v in by_key.values()]
-    print(f"📤 최종 결과 {len(result)}건 반환")
+    print(f"📤 최종 결과 {len(result)}건 발환")
     return result
 
 @app.route("/static/<path:filename>")
@@ -128,7 +136,7 @@ def admin_refresh():
     return jsonify({"status": "refresh started"})
 
 if __name__ == "__main__":
-    run_async_refresh_once()  # ✅ 부팅 시 1회 캐시 수집 (비동기)
+    run_async_refresh_once()
     port = int(os.environ.get("PORT", 5000))
     print(f"🌐 Flask 서버 실행 시작: 포트 {port}")
     app.run(host="0.0.0.0", port=port)
