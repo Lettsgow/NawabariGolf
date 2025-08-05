@@ -58,12 +58,16 @@ def get_all_golfclubs():
 def get_grouped_teetime():
     try:
         data = request.get_json()
+        print("📥 POST 요청 수신:", data)  # 🔍 요청 받은 데이터 출력
+
         start = datetime.strptime(data["start_date"], "%Y-%m-%d")
         end = datetime.strptime(data["end_date"], "%Y-%m-%d")
         hour_range = data.get("hour_range")
         favorite = data.get("favorite_clubs", [])
+
         return jsonify(get_consolidated_teetime(start, end, hour_range, favorite))
     except Exception as e:
+        print("❌ API 오류:", e)  # 🔥 여기 추가
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_ttime_grouped", methods=["GET"])
