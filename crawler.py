@@ -6,8 +6,8 @@ from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
 
 # ────────────────────────────── 설정 ──────────────────────────────
 DATA_DIR   = Path("data"); DATA_DIR.mkdir(exist_ok=True)
-MAX_DAYS   = 30            # 오늘부터 10일치
-INTERVAL   = 900          # 11분(초)
+MAX_DAYS   = 18            # 오늘부터 10일치
+INTERVAL   = 9000          # 11분(초)
 FAVORITES  = []           # 추후 환경변수 등으로 주입 가능
 
 # ────────────────────────────── 함수 ──────────────────────────────
