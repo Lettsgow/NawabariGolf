@@ -77,7 +77,7 @@ def crawl_golfpang(date_str: str, favorite):
             sector = "4"
         elif address.startswith("강원"):
             sector = "8"
-        elif address.startswith("전라"):
+        #elif address.startswith("전라"):
             sector = "16"
         else:
             print(f"[Golfpang] {name} 주소로 지역 판단 실패: {address}")
