@@ -25,6 +25,9 @@ MEMORY_CACHE = {}
 CACHE_LOCK = threading.Lock()
 MAX_DAYS = 18
 
+# 고정 섹터: 5, 4, 8만 크롤링
+GOLFPANG_SECTORS = [5, 4, 8]
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Golfpang 회로 차단기(circuit breaker)
 # - 연속 실패가 THRESH 이상이면 COOL_MIN 분 동안 Golfpang 호출을 잠시 스킵
@@ -70,10 +73,10 @@ def full_refresh_cache():
             except Exception as e_ts:
                 print(f"❗️ {date_str} Teescan 실패: {e_ts}")
 
-            # Golfpang은 회로차단기 상태에 따라 호출/스킵
+            # Golfpang은 회로차단기 상태에 따라 호출/스킵 (섹터 5,4,8만)
             if _golfpang_allowed_now():
                 try:
-                    golfpang_items = crawl_golfpang(date_str, favorite=[])
+                    golfpang_items = crawl_golfpang(date_str, favorite=[], sectors=GOLFPANG_SECTORS)
                     _golfpang_on_success()
                 except Exception as e_gp:
                     print(f"❗️ {date_str} Golfpang 실패: {e_gp}")
@@ -192,7 +195,7 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     by_key = {}
     for it in consolidated:
         try:
-            h = int(it["hour_num"])
+            h = int(it["hour_num"]) 
             if hour_range and h not in hour_range:
                 continue
         except:
@@ -236,9 +239,10 @@ def debug():
         ["curl", "-I", "-4", "--connect-timeout", "8", "https://www.golfpang.com"],
         ["curl", "-I", "-6", "--connect-timeout", "8", "https://www.golfpang.com"],
         [
-            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\n",
+            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}
+",
             "-H", "X-Requested-With: XMLHttpRequest",
-            "-H", "Referer: https://www.golfpang.com/web/round/booking_list.do",
+            "-H", "Referer: https://www.golfpang.com/web/round/booking.do",
             "-H", "Origin: https://www.golfpang.com",
             "--data", "sector=5&page=1",
             "--connect-timeout", "10", "-m", "20",
@@ -249,10 +253,15 @@ def debug():
     for c in cmds:
         try:
             res = subprocess.run(c, capture_output=True, text=True)
-            out_lines.append(f"$ {' '.join(c)}\n{res.stdout}{res.stderr}\n")
+            out_lines.append(f"$ {' '.join(c)}
+{res.stdout}{res.stderr}
+")
         except Exception as e:
-            out_lines.append(f"$ {' '.join(c)}\nERROR: {e}\n")
-    return "<pre>" + "\n".join(out_lines) + "</pre>", 200
+            out_lines.append(f"$ {' '.join(c)}
+ERROR: {e}
+")
+    return "<pre>" + "
+".join(out_lines) + "</pre>", 200
 # ─────────────────────────────────────────────────────────────────────────────
 
 
