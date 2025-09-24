@@ -238,7 +238,7 @@ def debug():
         [
             "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\n",
             "-H", "X-Requested-With: XMLHttpRequest",
-            "-H", "Referer: https://www.golfpang.com/web/round/booking.do",
+            "-H", "Referer: https://www.golfpang.com/web/round/booking_list.do",
             "-H", "Origin: https://www.golfpang.com",
             "--data", "sector=5&page=1",
             "--connect-timeout", "10", "-m", "20",
