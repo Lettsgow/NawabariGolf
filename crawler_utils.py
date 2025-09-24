@@ -1,5 +1,4 @@
 import requests, json, os, time, re
-from datetime import datetime
 from bs4 import BeautifulSoup
 from typing import List, Dict
 import urllib3
@@ -20,8 +19,11 @@ with open(golf_club_path, "r", encoding="utf-8") as f:
 GOLFPANG_BASE = "https://www.golfpang.com"
 LIST_URL = f"{GOLFPANG_BASE}/web/round/booking_list.do"
 SECTORS = [5, 4, 8]  # 경기/충청/강원
+
+# 환경변수로 세부 튜닝
 MAX_PAGES_PER_SECTOR = int(os.environ.get("GPANG_MAX_PAGES", 5))
-REQ_TIMEOUT = int(os.environ.get("GPANG_TIMEOUT", 12))
+CONNECT_TIMEOUT = int(os.environ.get("GPANG_CONNECT_TIMEOUT", 5))
+READ_TIMEOUT = int(os.environ.get("GPANG_READ_TIMEOUT", 20))
 SLEEP_BETWEEN = float(os.environ.get("GPANG_SLEEP", 0.6))
 
 HEADERS_HTML = {
@@ -29,37 +31,34 @@ HEADERS_HTML = {
         "GPANG_UA",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "ko,en;q=0.9",
     "Referer": f"{GOLFPANG_BASE}/web/round/booking.do",
 }
 
-
 def _make_session() -> requests.Session:
     s = requests.Session()
     retry = Retry(
-        total=4, connect=4, read=4, backoff_factor=0.3,
+        total=6, connect=6, read=6, backoff_factor=0.5,
         status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=["GET"],
+        raise_on_status=False,
     )
     adapter = HTTPAdapter(max_retries=retry, pool_connections=20, pool_maxsize=40)
     s.mount("https://", adapter)
     s.mount("http://", adapter)
     return s
 
-
 def _parse_price(txt: str) -> int:
     digits = re.sub(r"[^0-9]", "", txt or "")
     return int(digits) if digits else 10**12
-
 
 def _parse_hour_num(hour_text: str) -> int:
     m = re.search(r"(\d{1,2})", hour_text or "")
     return int(m.group(1)) if m else -1
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Teescan (기존 로직 유지, 사소한 안정화만)
-
 def crawl_teescan(date_str: str, favorite: List[str]):
     url_tpl = (
         "https://foapi.teescanner.com/v1/booking/getTeeTimeListbyGolfclub"
@@ -100,10 +99,8 @@ def crawl_teescan(date_str: str, favorite: List[str]):
             print(f"[Teescan] {name} 오류: {e}")
     return res
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Golfpang — booking_list.do (HTML) 섹터 5,4,8만 순회
-
 def crawl_golfpang(date_str: str, favorite: List[str]):
     """
     - 섹터 5,4,8만 순회하며 booking_list.do(HTML)를 페이지별로 파싱
@@ -118,13 +115,18 @@ def crawl_golfpang(date_str: str, favorite: List[str]):
                 params = {"sector": sector, "page": page}
                 try:
                     print(f"[Golfpang] GET {LIST_URL}?sector={sector}&page={page}")
-                    r = s.get(LIST_URL, params=params, headers=HEADERS_HTML, timeout=REQ_TIMEOUT, verify=False)
+                    r = s.get(
+                        LIST_URL,
+                        params=params,
+                        headers=HEADERS_HTML,
+                        timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),  # (connect, read)
+                        verify=False,  # 인증서 경고 무시
+                    )
                     if r.status_code != 200:
                         print(f"[Golfpang] sector {sector} page {page} HTTP {r.status_code}")
                         break
-                    soup = BeautifulSoup(r.text, "html.parser")
 
-                    # 카드/아이템 후보 셀렉터
+                    soup = BeautifulSoup(r.text, "html.parser")
                     candidates = soup.select("li, div.card, div.item, tr")
                     items_found = 0
 
@@ -166,8 +168,6 @@ def crawl_golfpang(date_str: str, favorite: List[str]):
 
                         if not (name and date_txt and time_txt and price_txt):
                             continue
-
-                        # 필터: 날짜 일치 + favorite
                         if date_txt != date_str:
                             continue
                         if favorite and not any(f in name for f in favorite):
@@ -188,14 +188,14 @@ def crawl_golfpang(date_str: str, favorite: List[str]):
                         items_found += 1
 
                     if items_found == 0:
-                        # 이 페이지엔 더 이상 없음 → 다음 섹터로
-                        break
-
+                        break  # 이 페이지엔 더 없음 → 다음 섹터
                     time.sleep(SLEEP_BETWEEN)
 
+                except requests.exceptions.ConnectTimeout as e:
+                    print(f"[Golfpang] sector {sector} page {page} 연결타임아웃: {e}")
+                    break
                 except Exception as e:
                     print(f"[Golfpang] sector {sector} page {page} 오류: {e}")
-                    # 네트워크 오류시 다음 페이지 재시도보단 다음 섹터로 이동(보수적)
                     break
 
     return out
