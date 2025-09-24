@@ -253,15 +253,10 @@ def debug():
     for c in cmds:
         try:
             res = subprocess.run(c, capture_output=True, text=True)
-            out_lines.append(f"$ {' '.join(c)}
-{res.stdout}{res.stderr}
-")
+            out_lines.append(f"$ {' '.join(c)}\n{res.stdout}{res.stderr}\n")
         except Exception as e:
-            out_lines.append(f"$ {' '.join(c)}
-ERROR: {e}
-")
-    return "<pre>" + "
-".join(out_lines) + "</pre>", 200
+            out_lines.append(f"$ {' '.join(c)}\nERROR: {e}\n")
+    return "<pre>" + "\n".join(out_lines) + "</pre>", 200
 # ─────────────────────────────────────────────────────────────────────────────
 
 
