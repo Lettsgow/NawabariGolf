@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import threading, time, os, subprocess
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
+import inspect
 
 # ─────────────────────────────────────────────────────────────────────────────
 # (옵션) IPv6 경로 문제 우회: FORCE_IPV4=1 환경변수를 주면 IPv4만 사용
@@ -27,6 +28,18 @@ MAX_DAYS = 18
 
 # 고정 섹터: 5, 4, 8만 크롤링
 GOLFPANG_SECTORS = [5, 4, 8]
+
+# crawl_golfpang 시그니처 호환 래퍼 (sectors 인자 유무 자동 감지)
+def _call_crawl_golfpang(date_str: str, favorite: list, sectors: list):
+    try:
+        sig = inspect.signature(crawl_golfpang)
+        if 'sectors' in sig.parameters:
+            return crawl_golfpang(date_str, favorite=favorite, sectors=sectors)
+        # 구버전: sectors 미지원
+        return crawl_golfpang(date_str, favorite=favorite)
+    except TypeError:
+        # 방어: 시그니처 인식 실패 시 구버전 방식으로 재시도
+        return crawl_golfpang(date_str, favorite=favorite)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Golfpang 회로 차단기(circuit breaker)
@@ -76,7 +89,7 @@ def full_refresh_cache():
             # Golfpang은 회로차단기 상태에 따라 호출/스킵 (섹터 5,4,8만)
             if _golfpang_allowed_now():
                 try:
-                    golfpang_items = crawl_golfpang(date_str, favorite=[], sectors=GOLFPANG_SECTORS)
+                    golfpang_items = _call_crawl_golfpang(date_str, favorite=[], sectors=GOLFPANG_SECTORS)
                     _golfpang_on_success()
                 except Exception as e_gp:
                     print(f"❗️ {date_str} Golfpang 실패: {e_gp}")
@@ -239,7 +252,7 @@ def debug():
         ["curl", "-I", "-4", "--connect-timeout", "8", "https://www.golfpang.com"],
         ["curl", "-I", "-6", "--connect-timeout", "8", "https://www.golfpang.com"],
         [
-            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\\n",
+            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\n",
             "-H", "X-Requested-With: XMLHttpRequest",
             "-H", "Referer: https://www.golfpang.com/web/round/booking.do",
             "-H", "Origin: https://www.golfpang.com",
@@ -252,10 +265,10 @@ def debug():
     for c in cmds:
         try:
             res = subprocess.run(c, capture_output=True, text=True)
-            out_lines.append(f"$ {' '.join(c)}\\n{res.stdout}{res.stderr}\\n")
+            out_lines.append(f"$ {' '.join(c)}\n{res.stdout}{res.stderr}\n")
         except Exception as e:
-            out_lines.append(f"$ {' '.join(c)}\\nERROR: {e}\\n")
-    return ("<pre>" + "\\n".join(out_lines) + "</pre>", 200)
+            out_lines.append(f"$ {' '.join(c)}\nERROR: {e}\n")
+    return ("<pre>" + "\n".join(out_lines) + "</pre>", 200)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
