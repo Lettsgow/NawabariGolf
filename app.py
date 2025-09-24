@@ -1,14 +1,12 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import threading, time, os, subprocess
+import threading, time, os, subprocess, inspect
 
 from crawler_utils import crawl_teescan, crawl_golfpang, GOLF_CLUBS
-import inspect
 
 # ─────────────────────────────────────────────────────────────────────────────
 # (옵션) IPv6 경로 문제 우회: FORCE_IPV4=1 환경변수를 주면 IPv4만 사용
-# Render 무료티어에서 -6 경로가 막히거나 느릴 때 유용
 try:
     if os.environ.get("FORCE_IPV4") == "1":
         import socket
@@ -35,20 +33,17 @@ def _call_crawl_golfpang(date_str: str, favorite: list, sectors: list):
         sig = inspect.signature(crawl_golfpang)
         if 'sectors' in sig.parameters:
             return crawl_golfpang(date_str, favorite=favorite, sectors=sectors)
-        # 구버전: sectors 미지원
         return crawl_golfpang(date_str, favorite=favorite)
     except TypeError:
-        # 방어: 시그니처 인식 실패 시 구버전 방식으로 재시도
         return crawl_golfpang(date_str, favorite=favorite)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Golfpang 회로 차단기(circuit breaker)
-# - 연속 실패가 THRESH 이상이면 COOL_MIN 분 동안 Golfpang 호출을 잠시 스킵
 GOLFPANG_CB = {
     "fails": 0,
     "open_until": None,   # datetime or None
-    "THRESH": 3,          # 연속 3회 실패 시
-    "COOL_MIN": 5         # 5분 쿨다운
+    "THRESH": int(os.environ.get("GOLFPANG_CB_THRESH", 5)),  # 연속 실패 임계
+    "COOL_MIN": int(os.environ.get("GOLFPANG_CB_COOL_MIN", 5)),  # 쿨다운(분)
 }
 
 def _golfpang_allowed_now():
@@ -69,7 +64,6 @@ def _golfpang_on_failure():
         print(f"🧯 Golfpang 회로 열림: {GOLFPANG_CB['COOL_MIN']}분 동안 스킵 (연속실패={GOLFPANG_CB['fails']})")
 # ─────────────────────────────────────────────────────────────────────────────
 
-
 def full_refresh_cache():
     today = datetime.now().date()
     updated_count = 0
@@ -80,13 +74,13 @@ def full_refresh_cache():
             teescan_items = []
             golfpang_items = []
 
-            # Teescan은 그대로 시도
+            # Teescan
             try:
                 teescan_items = crawl_teescan(date_str, favorite=[])
             except Exception as e_ts:
                 print(f"❗️ {date_str} Teescan 실패: {e_ts}")
 
-            # Golfpang은 회로차단기 상태에 따라 호출/스킵 (섹터 5,4,8만)
+            # Golfpang (섹터 5,4,8만)
             if _golfpang_allowed_now():
                 try:
                     golfpang_items = _call_crawl_golfpang(date_str, favorite=[], sectors=GOLFPANG_SECTORS)
@@ -114,7 +108,6 @@ def full_refresh_cache():
                     print(f"⛔️ {date_str} 캐시 갱신 실패 - 락 획득 실패")
             else:
                 print(f"⚠️ {date_str} 크롤링 결과 없음 (TS:{len(teescan_items)}, GP:{len(golfpang_items)})")
-
         except Exception as e:
             print(f"❌ {date_str} 크롤링 실패(전체 루프): {e}")
 
@@ -129,7 +122,6 @@ def full_refresh_cache():
 
     print(f"🧠 전체 캐시 갱신 완료: {updated_count}건")
 
-
 def run_async_refresh_once():
     def _start():
         print("🚀 서버 부팅 후 1회 캐시 수집 시작")
@@ -139,17 +131,14 @@ def run_async_refresh_once():
             print("❌ 초기 캐시 수집 실패:", e)
     threading.Thread(target=_start, daemon=True).start()
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/get_all_golfclubs")
 def get_all_golfclubs():
     names = sorted(c["name"] for c in GOLF_CLUBS)
     return jsonify(names)
-
 
 @app.route("/get_ttime_grouped", methods=["POST"])
 def get_grouped_teetime():
@@ -167,7 +156,6 @@ def get_grouped_teetime():
         print("❌ API 오류:", e)
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/get_ttime_grouped", methods=["GET"])
 def get_grouped_teetime_gpt():
     start_str = request.args.get("start_date")
@@ -180,7 +168,6 @@ def get_grouped_teetime_gpt():
     except Exception as e:
         return jsonify({"error": f"Invalid date format: {e}"}), 400
     return jsonify(get_consolidated_teetime(start, end, None, []))
-
 
 def get_from_cache(date_str, favorite):
     got_lock = CACHE_LOCK.acquire(timeout=3)
@@ -197,7 +184,6 @@ def get_from_cache(date_str, favorite):
     finally:
         CACHE_LOCK.release()
 
-
 def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     print(f"📅 통합 티타임 조회: {start} ~ {end}, 시간 필터: {hour_range}, 선호: {favorite}")
     consolidated = []
@@ -208,10 +194,10 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     by_key = {}
     for it in consolidated:
         try:
-            h = int(it["hour_num"]) 
+            h = int(it["hour_num"])
             if hour_range and h not in hour_range:
                 continue
-        except:
+        except Exception:
             continue
         k = (it["golf"], it["date"], it["hour"])
         if k not in by_key or it["price"] < by_key[k]["price"]:
@@ -228,11 +214,9 @@ def get_consolidated_teetime(start, end, hour_range=None, favorite=[]):
     print(f"📤 최종 결과 {len(result)}건 반환")
     return result
 
-
 @app.route("/static/<path:filename>")
 def static_files(filename):
     return send_from_directory("static", filename)
-
 
 @app.route("/admin/refresh", methods=["POST"])
 def admin_refresh():
@@ -242,35 +226,30 @@ def admin_refresh():
     threading.Thread(target=_refresh_task, daemon=True).start()
     return jsonify({"status": "refresh started"})
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Render 무료티어용 네트워크 진단 엔드포인트 (/debug)
-# - 서버 내부에서 실제 curl을 실행해 응답/타임아웃을 브라우저로 확인
+# - booking_list.do 대상으로 IPv4/IPv6 응답 확인
 @app.route("/debug")
 def debug():
     cmds = [
-        ["curl", "-I", "-4", "--connect-timeout", "8", "https://www.golfpang.com"],
-        ["curl", "-I", "-6", "--connect-timeout", "8", "https://www.golfpang.com"],
-        [
-            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\n",
-            "-H", "X-Requested-With: XMLHttpRequest",
-            "-H", "Referer: https://www.golfpang.com/web/round/booking.do",
-            "-H", "Origin: https://www.golfpang.com",
-            "--data", "sector=5&page=1",
-            "--connect-timeout", "10", "-m", "20",
-            "https://www.golfpang.com/web/round/booking_tblList.do"
-        ]
+        ["curl", "-I", "-4", "--connect-timeout", "8",
+         "https://www.golfpang.com/web/round/booking_list.do?sector=5&page=1"],
+        ["curl", "-I", "-6", "--connect-timeout", "8",
+         "https://www.golfpang.com/web/round/booking_list.do?sector=5&page=1"],
     ]
     out_lines = []
     for c in cmds:
         try:
             res = subprocess.run(c, capture_output=True, text=True)
-            out_lines.append(f"$ {' '.join(c)}\n{res.stdout}{res.stderr}\n")
+            out_lines.append(f"$ {' '.join(c)}\\n{res.stdout}{res.stderr}\\n")
         except Exception as e:
-            out_lines.append(f"$ {' '.join(c)}\nERROR: {e}\n")
-    return ("<pre>" + "\n".join(out_lines) + "</pre>", 200)
+            out_lines.append(f"$ {' '.join(c)}\\nERROR: {e}\\n")
+    return "<pre>" + "\\n".join(out_lines) + "</pre>", 200
 # ─────────────────────────────────────────────────────────────────────────────
 
+@app.route("/healthz")
+def healthz():
+    return {"status": "ok", "cached_days": len(MEMORY_CACHE)}, 200
 
 if __name__ == "__main__":
     run_async_refresh_once()
