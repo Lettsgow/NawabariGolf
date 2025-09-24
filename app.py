@@ -239,8 +239,7 @@ def debug():
         ["curl", "-I", "-4", "--connect-timeout", "8", "https://www.golfpang.com"],
         ["curl", "-I", "-6", "--connect-timeout", "8", "https://www.golfpang.com"],
         [
-            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}
-",
+            "curl", "-s", "-o", "/dev/null", "-w", "ajax:%{http_code}\\n",
             "-H", "X-Requested-With: XMLHttpRequest",
             "-H", "Referer: https://www.golfpang.com/web/round/booking.do",
             "-H", "Origin: https://www.golfpang.com",
@@ -253,10 +252,10 @@ def debug():
     for c in cmds:
         try:
             res = subprocess.run(c, capture_output=True, text=True)
-            out_lines.append(f"$ {' '.join(c)}\n{res.stdout}{res.stderr}\n")
+            out_lines.append(f"$ {' '.join(c)}\\n{res.stdout}{res.stderr}\\n")
         except Exception as e:
-            out_lines.append(f"$ {' '.join(c)}\nERROR: {e}\n")
-    return "<pre>" + "\n".join(out_lines) + "</pre>", 200
+            out_lines.append(f"$ {' '.join(c)}\\nERROR: {e}\\n")
+    return ("<pre>" + "\\n".join(out_lines) + "</pre>", 200)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
